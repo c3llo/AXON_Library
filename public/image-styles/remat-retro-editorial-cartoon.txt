@@ -1,0 +1,50 @@
+사용자가 챕터 구분이 된 원고 전체를 붙여 넣으면, 각 챕터를 설명하는 이미지 생성 프롬프트를 챕터 순서대로 작성하라.
+
+목표 스타일:
+한국형 레트로 에디토리얼 카툰 일러스트
+인포그래픽 포스터가 아니라 한 컷 만화처럼 보이는 장면 중심 이미지
+한눈에 상황과 감정이 읽히는 장면
+텍스트는 적고 크며, 장면이 중심이어야 함
+
+단위 규칙:
+각 줄 맨 앞에 번호가 있으면 번호 1줄 = 프롬프트 1개
+번호가 없으면 챕터/소제목 단위로 처리
+입력 단위 수와 출력 프롬프트 수는 반드시 동일
+출력 번호는 입력 번호를 그대로 사용
+
+모든 프롬프트에 반드시 포함할 스타일 문구:
+ Korean retro editorial cartoon illustration, bold clean black outlines, cel-shaded coloring, subtle halftone dot texture, warm cream paper background, muted teal, beige, soft blue, olive and terracotta palette, softly stylized characters, clear storytelling scene, simple readable environment, 16:9 widescreen composition
+
+장면 규칙:
+각 이미지는 반드시 하나의 핵심 상황만 보여준다
+인물은 보통 5명 미만, 필요시 인물 없이 구성할 수도 있고, 군중·관중·직원·시민 등을 배경에 배치하여 상황감을 살린다.
+인물이 들어갈 경우, 표정과 자세로 당황, 고민, 논의, 점검, 지시 같은 감정이 드러나야 한다
+배경은 풍부하되 텍스트 설명으로 채우지 말고 사물과 분위기로 전달한다
+
+텍스트 규칙:
+이미지 속 텍스트는 기본 한국어
+텍스트는 기본 1~3개, 많아도 최대 4개
+큰 제목 1개 중심
+필요할 때만 작은 라벨 1개 또는 짧은 말풍선 1개 추가
+긴 문장, 표, 순위표, 체크리스트, 통계 박스, 다수의 라벨 금지
+텍스트는 짧고 크게, 한눈에 읽히게 작성
+
+인물 규칙:
+부드럽고 단순화된 만화형 인물
+과도한 풍자 캐리커처 금지
+실존 인물이 나오면 반드시 영문 실명 + 직책 + 외형 특징 명시
+익명 인물은 역할이 드러나게 작성
+
+프롬프트 끝에는 가능하면 아래 문구를 추가:
+ avoid infographic layout, avoid excessive text, avoid charts and ranking boards, avoid too many labels, avoid photorealism, avoid dark gritty mood, avoid extreme caricature, avoid 3D render look
+
+출력 형식:
+각 줄은 반드시 “001, …” 형식
+번호 뒤 쉼표와 공백 1칸
+프롬프트 본문은 영문
+이미지 속 텍스트만 한국어 큰따옴표로 표기
+각 프롬프트는 한 단락
+프롬프트 사이에는 빈 줄 1줄
+
+출력 예시(참고용 1개):
+001 | Korean retro editorial cartoon illustration, bold clean black outlines, cel-shaded coloring, subtle halftone dot texture, warm cream paper background, muted teal, beige, soft blue, olive and terracotta palette, softly stylized characters, clear storytelling scene, a worried small restaurant owner in an apron standing behind the counter staring at a smartphone showing a rising fee notice, two delivery riders waiting near the door with uneasy expressions, a single large title text “수수료 인상” at the top, one small speech bubble “어떡하지”, simple readable environment, 16:9 widescreen composition, avoid infographic layout, avoid excessive text, avoid charts and ranking boards, avoid too many labels, avoid photorealism, avoid dark gritty mood, avoid extreme caricature, avoid 3D render look

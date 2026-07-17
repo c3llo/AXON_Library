@@ -1,0 +1,14 @@
+## 마스터 프롬프트 (이미지 프롬프트 생성용 지시문)
+아래는 넘버링된 한국 유튜브 대본이다. 각 번호(001, 002, …)마다 해당 문장의 핵심 내용을 가장 잘 표현하는 이미지 생성 프롬프트를 하나씩 만들어라. 다음 규칙을 반드시 지켜라.
+출력 형식은 각 번호별로 "번호 | 영어 이미지 프롬프트" 한 줄씩으로 작성하고, 그 외 설명이나 부연은 붙이지 않는다.
+모든 프롬프트는 아래 고정 스타일 블록을 프롬프트 끝에 그대로 붙여 전체 이미지의 화풍을 통일한다.
+
+고정 스타일 블록:
+Korean explainer infographic webtoon illustration, bright and clean flat cartoon style, light airy color palette with soft pastel tones, evenly lit cheerful daytime lighting, simple friendly semi-cartoon characters with proportional but slightly stylized human figures, clear readable facial expressions and natural gestures, clean thin outlines, smooth flat cel shading with minimal shadows, soft muted yet bright colors, plenty of white and light background space, uncluttered tidy composition with strong clear focal point, light and approachable current-affairs explainer mood, simplified realistic backgrounds appropriate to the scene, readable object shapes, suitable for Korean news explainer YouTube insert illustration.
+
+각 프롬프트의 앞부분(고정 스타일 블록 앞)에는 해당 번호 문장의 장면을 영어로 묘사하되 다음을 지켜라.
+장면은 한 장의 정지된 그림으로 표현 가능한 단일 순간이어야 한다. 한 번호에 문장이 여러 개라 장면이 둘 이상이면, 그중 가장 시각적으로 강렬한 한 순간만 골라 묘사한다. 시간 흐름이나 여러 동작을 한 프롬프트에 섞지 않는다.
+등장인물의 구체적 행동, 표정, 자세, 시선, 손동작과 함께 장소·배경·소품·조명·분위기를 묘사해 화면이 비어 보이지 않게 한다. 인물 수, 카메라 앵글(클로즈업·전신·부감 등), 화면 구도(예: 좌측 인물·우측 여백)를 명시해 초점이 분명하게 한다. 화면 비율은 16:9 가로형(유튜브 삽입용)을 전제로 구도를 잡는다.
+실존 인물이 등장하는 장면에서는 그 인물의 실명과 직책을 영어로 함께 명시한다(예: Hong Myung-bo, former South Korean national football team head coach / Chung Mong-gyu, president of the Korea Football Association / Lee Im-saeng, KFA technical director / Park Joo-ho, football commentator). 같은 인물이 여러 번 등장하면 표기를 동일하게 유지해 일관성을 확보하고, 그 인물의 대략적 나이대·체형·복장도 매번 함께 적어 그림체가 일관되게 한다.
+추상적·개념적 문장(통계, 제도, 감정, 비유 등)은 그 개념을 상징하는 구체적 시각 은유로 바꾼다. 예를 들어 "신뢰가 무너졌다"는 금이 간 유리나 무너지는 구조물로, "카르텔 구조"는 닫힌 원형 테이블에 둘러앉은 어두운 실루엣 인물들로, "역대 최악의 성적"은 바닥으로 곤두박질치는 하강 그래프 화살표로 표현한다.
+각 프롬프트 끝에는 화면에 글자가 들어가지 않도록 no text, no letters, no watermark를 덧붙인다.

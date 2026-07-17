@@ -2,9 +2,17 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { VOICES } from "./data/voices.js";
+import IMAGE_STYLE_CATALOG from "./data/imageStyles.json";
 
-type Tab = "programs" | "voice";
+type Tab = "programs" | "voice" | "image";
 type Voice = (typeof VOICES)[number];
+type CopyState = { id: string; status: "copied" | "error" } | null;
+
+const IMAGE_STYLES = IMAGE_STYLE_CATALOG.styles.map((style) => ({
+  ...style,
+  imageUrl: `/image-styles/${style.id}.webp`,
+  promptUrl: `/image-styles/${style.promptFile}`,
+}));
 
 const PROGRAMS = [
   {
@@ -52,6 +60,7 @@ export default function AxonLibrary() {
   const [query, setQuery] = useState("");
   const [playingId, setPlayingId] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [styleCopyState, setStyleCopyState] = useState<CopyState>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const filteredVoices = useMemo(() => {
@@ -99,6 +108,21 @@ export default function AxonLibrary() {
     window.setTimeout(() => setCopiedId(null), 1400);
   }
 
+  async function copyImageStyle(style: (typeof IMAGE_STYLES)[number]) {
+    try {
+      const response = await fetch(style.promptUrl);
+      if (!response.ok) throw new Error(`스타일 파일을 불러오지 못했습니다. (${response.status})`);
+      await navigator.clipboard.writeText(await response.text());
+      setStyleCopyState({ id: style.id, status: "copied" });
+    } catch {
+      setStyleCopyState({ id: style.id, status: "error" });
+    }
+
+    window.setTimeout(() => {
+      setStyleCopyState((current) => current?.id === style.id ? null : current);
+    }, 1600);
+  }
+
   return (
     <main className="site-shell">
       <div className="ambient ambient-one" />
@@ -138,6 +162,16 @@ export default function AxonLibrary() {
             Voice
             <span className="tab-badge">92</span>
           </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeTab === "image"}
+            className={activeTab === "image" ? "active" : ""}
+            onClick={() => selectTab("image")}
+          >
+            이미지
+            <span className="tab-badge">{IMAGE_STYLES.length}</span>
+          </button>
         </nav>
 
         <div className="header-status">
@@ -146,7 +180,7 @@ export default function AxonLibrary() {
         </div>
       </header>
 
-      {activeTab === "programs" ? (
+      {activeTab === "programs" && (
         <section className="programs-view" role="tabpanel">
           <div className="hero">
             <div>
@@ -207,7 +241,9 @@ export default function AxonLibrary() {
             <p>프로그램 카드는 GitHub Release의 최신 공개 버전을 기준으로 업데이트됩니다.</p>
           </div>
         </section>
-      ) : (
+      )}
+
+      {activeTab === "voice" && (
         <section className="voice-view" role="tabpanel">
           <div className="voice-heading">
             <div>
@@ -273,6 +309,64 @@ export default function AxonLibrary() {
           {filteredVoices.length === 0 && (
             <div className="empty-state"><strong>검색 결과가 없습니다.</strong><span>다른 이름이나 음성 스타일을 입력해보세요.</span></div>
           )}
+        </section>
+      )}
+
+      {activeTab === "image" && (
+        <section className="image-view" role="tabpanel">
+          <div className="image-heading">
+            <div>
+              <p className="section-kicker"><span /> AXON IMAGE STYLE LIBRARY</p>
+              <h1>그림체를 보고,<br /><em>바로 복사하세요.</em></h1>
+            </div>
+            <p>
+              AXON Studio의 추천 이미지 스타일을 미리 보고,<br className="desktop-only" />
+              원하는 스타일의 전체 프롬프트를 한 번에 복사하세요.
+            </p>
+          </div>
+
+          <div className="image-result-line">
+            <span>{IMAGE_STYLES.length.toString().padStart(2, "0")} IMAGE STYLES</span>
+            <span className="rule" />
+          </div>
+
+          <div className="image-style-library-grid">
+            {IMAGE_STYLES.map((style, index) => {
+              const copyState = styleCopyState?.id === style.id ? styleCopyState.status : null;
+              return (
+                <article className="image-library-card" key={style.id}>
+                  <div className="image-library-preview">
+                    {/* Static public assets are used directly because vinext does not provide Next's image optimizer. */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={style.imageUrl}
+                      alt={`${style.name} 그림체 예시`}
+                      width={640}
+                      height={360}
+                      loading="lazy"
+                    />
+                    <span>{String(index + 1).padStart(2, "0")}</span>
+                  </div>
+                  <div className="image-library-content">
+                    <h2>{style.name}</h2>
+                    <p>{style.visualSummary}</p>
+                    <button
+                      type="button"
+                      className={copyState ? copyState : ""}
+                      onClick={() => copyImageStyle(style)}
+                    >
+                      <span aria-hidden="true">{copyState === "copied" ? "✓" : "▣"}</span>
+                      {copyState === "copied"
+                        ? "복사되었습니다"
+                        : copyState === "error"
+                          ? "복사하지 못했습니다"
+                          : "그림체 스타일 복사"}
+                    </button>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
         </section>
       )}
 

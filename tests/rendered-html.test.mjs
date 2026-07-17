@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 
 async function render() {
@@ -23,5 +24,20 @@ test("server-renders the AXON software library", async () => {
   assert.match(html, /AXON Studio/);
   assert.match(html, /AXON StoryLab/);
   assert.match(html, /Voice/);
+  assert.match(html, /이미지<span class="tab-badge">8<\/span>/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/);
+});
+
+test("ships every image style preview and copyable prompt", async () => {
+  const catalogUrl = new URL("../app/data/imageStyles.json", import.meta.url);
+  const catalog = JSON.parse(await readFile(catalogUrl, "utf8"));
+
+  assert.equal(catalog.styles.length, 8);
+  for (const style of catalog.styles) {
+    const imageUrl = new URL(`../public/image-styles/${style.id}.webp`, import.meta.url);
+    const promptUrl = new URL(`../public/image-styles/${style.promptFile}`, import.meta.url);
+    await access(imageUrl);
+    const prompt = await readFile(promptUrl, "utf8");
+    assert.ok(prompt.length > 1000, `${style.id} prompt should contain the full style instructions`);
+  }
 });
