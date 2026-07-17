@@ -24,6 +24,11 @@ test("server-renders the AXON software library", async () => {
   assert.match(html, /<title>AXON Software Library<\/title>/i);
   assert.match(html, /AXON Studio/);
   assert.match(html, /AXON StoryLab/);
+  assert.match(html, /AXON YTDN/);
+  assert.match(html, /AXON YTMY Checker/);
+  assert.match(html, /AXON_YTDN_Release\/releases\/download\/v1\.2\.10\/AXON_YTDN\.exe/);
+  assert.match(html, /chromewebstore\.google\.com\/detail\/lfnpgncnfnkkmklbegepgollckpakmim/);
+  assert.match(html, /04(?:<!-- -->)? PROGRAMS/);
   assert.match(html, /Voice<span class="tab-badge">91<\/span>/);
   assert.match(html, /이미지<span class="tab-badge">8<\/span>/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/);

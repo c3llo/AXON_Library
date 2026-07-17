@@ -8,13 +8,32 @@ type Tab = "programs" | "voice" | "image";
 type Voice = (typeof VOICES)[number];
 type CopyState = { id: string; status: "copied" | "error" } | null;
 
+type Program = {
+  index: string;
+  name: string;
+  eyebrow: string;
+  version: string;
+  date: string;
+  size: string;
+  description: string;
+  releaseNote: string;
+  accent: "blue" | "violet" | "cyan" | "green";
+  glyph: string;
+  platform: string;
+  downloadUrl: string;
+  downloadLabel: string;
+  releaseUrl?: string;
+  releaseLabel?: string;
+  externalDownload?: boolean;
+};
+
 const IMAGE_STYLES = IMAGE_STYLE_CATALOG.styles.map((style) => ({
   ...style,
   imageUrl: `/image-styles/${style.id}.webp`,
   promptUrl: `/image-styles/${style.promptFile}`,
 }));
 
-const PROGRAMS = [
+const PROGRAMS: Program[] = [
   {
     index: "01",
     name: "AXON Studio",
@@ -27,9 +46,13 @@ const PROGRAMS = [
     releaseNote:
       "Vrew 저장 오류 안내 개선, 캡컷 자막 위치 조정, 나이 발음 변환 오류 수정",
     accent: "blue",
+    glyph: "A",
+    platform: "WINDOWS",
     releaseUrl: "https://github.com/c3llo/AXON_Studio_Release/releases",
+    releaseLabel: "전체 릴리즈 보기",
     downloadUrl:
       "https://github.com/c3llo/AXON_Studio_Release/releases/download/v0.9.44/AXON_Studio.exe",
+    downloadLabel: "최신 버전 다운로드",
   },
   {
     index: "02",
@@ -43,11 +66,54 @@ const PROGRAMS = [
     releaseNote:
       "타이틀, 회원 구분, 초기화·불러오기·저장, 설정, 구글 로그인 기본 골격 공개",
     accent: "violet",
+    glyph: "S",
+    platform: "WINDOWS",
     releaseUrl: "https://github.com/c3llo/AXON_StoryLab_Release/releases",
+    releaseLabel: "전체 릴리즈 보기",
     downloadUrl:
       "https://github.com/c3llo/AXON_StoryLab_Release/releases/download/v0.1.0/AXON_StoryLab.exe",
+    downloadLabel: "최신 버전 다운로드",
   },
-] as const;
+  {
+    index: "03",
+    name: "AXON YTDN",
+    eyebrow: "YOUTUBE DOWNLOAD UTILITY",
+    version: "v1.2.10",
+    date: "2026. 7. 17",
+    size: "166 MB",
+    description:
+      "YouTube 콘텐츠를 간편하게 내려받고 관리하는 AXON 다운로드 도구. 포터블 실행 파일로 바로 사용할 수 있습니다.",
+    releaseNote:
+      "GitHub Release 기반 자동 빌드·배포와 포터블 EXE 자동 업데이트 적용",
+    accent: "cyan",
+    glyph: "Y",
+    platform: "WINDOWS",
+    releaseUrl: "https://github.com/c3llo/AXON_YTDN_Release/releases",
+    releaseLabel: "전체 릴리즈 보기",
+    downloadUrl:
+      "https://github.com/c3llo/AXON_YTDN_Release/releases/download/v1.2.10/AXON_YTDN.exe",
+    downloadLabel: "최신 버전 다운로드",
+  },
+  {
+    index: "04",
+    name: "AXON YTMY Checker",
+    eyebrow: "YOUTUBE CHANNEL ANALYZER",
+    version: "v1.0.0",
+    date: "2026. 5. 30",
+    size: "32.0 KiB",
+    description:
+      "현재 YouTube 채널의 주요 정보와 예상 수익 창출 여부를 빠르게 확인하는 Chrome 확장 프로그램입니다.",
+    releaseNote:
+      "채널명, 구독자 수, 총 조회수, 국가, 가입일과 예상 수익 범위를 한눈에 표시",
+    accent: "green",
+    glyph: "C",
+    platform: "CHROME",
+    downloadUrl:
+      "https://chromewebstore.google.com/detail/lfnpgncnfnkkmklbegepgollckpakmim?utm_source=item-share-cb",
+    downloadLabel: "Chrome에 추가",
+    externalDownload: true,
+  },
+];
 
 function DownloadIcon() {
   return <span aria-hidden="true">↓</span>;
@@ -198,12 +264,12 @@ export default function AxonLibrary() {
               <article className={`program-card ${program.accent}`} key={program.name}>
                 <div className="program-topline">
                   <span>{program.index}</span>
-                  <span className="platform-pill">WINDOWS</span>
+                  <span className="platform-pill">{program.platform}</span>
                 </div>
 
                 <div className="program-identity">
                   <div className="program-glyph" aria-hidden="true">
-                    {program.index === "01" ? "A" : "S"}
+                    {program.glyph}
                   </div>
                   <div>
                     <p>{program.eyebrow}</p>
@@ -225,20 +291,27 @@ export default function AxonLibrary() {
                 </dl>
 
                 <div className="program-actions">
-                  <a className="download-button" href={program.downloadUrl}>
-                    <DownloadIcon /> 최신 버전 다운로드
+                  <a
+                    className="download-button"
+                    href={program.downloadUrl}
+                    target={program.externalDownload ? "_blank" : undefined}
+                    rel={program.externalDownload ? "noreferrer" : undefined}
+                  >
+                    <DownloadIcon /> {program.downloadLabel}
                   </a>
-                  <a className="release-link" href={program.releaseUrl} target="_blank" rel="noreferrer">
-                    전체 릴리즈 보기 <span aria-hidden="true">↗</span>
-                  </a>
+                  {program.releaseUrl && (
+                    <a className="release-link" href={program.releaseUrl} target="_blank" rel="noreferrer">
+                      {program.releaseLabel} <span aria-hidden="true">↗</span>
+                    </a>
+                  )}
                 </div>
               </article>
             ))}
           </div>
 
           <div className="program-footnote">
-            <span>02 PROGRAMS</span>
-            <p>프로그램 카드는 GitHub Release의 최신 공개 버전을 기준으로 업데이트됩니다.</p>
+            <span>{String(PROGRAMS.length).padStart(2, "0")} PROGRAMS</span>
+            <p>프로그램 카드는 GitHub Release와 Chrome 웹스토어의 최신 공개 버전을 기준으로 업데이트됩니다.</p>
           </div>
         </section>
       )}

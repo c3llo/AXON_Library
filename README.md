@@ -4,7 +4,7 @@ AXON의 프로그램 배포 정보, Voice 샘플, 추천 이미지 스타일을 
 
 ## 구성
 
-- **프로그램**: AXON Studio, AXON StoryLab 최신 버전과 GitHub Release 연결
+- **프로그램**: AXON Studio, AXON StoryLab, AXON YTDN, AXON YTMY Checker 최신 버전과 배포 페이지 연결
 - **Voice**: TypeCast / ElevenLabs 음성 91개 재생, 검색, voice ID 복사, MP3 다운로드
 - **이미지**: AXON Studio 추천 그림체 8개 미리보기와 전체 스타일 프롬프트 복사
 
