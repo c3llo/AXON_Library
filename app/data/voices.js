@@ -10,15 +10,6 @@ export const VOICES = [
     "file": "/audio/male/%EA%B0%95%EC%9D%BC.mp3"
   },
   {
-    "id": "male-늑대경제학_목소리_학습용",
-    "category": "male",
-    "name": "늑대경제학_목소리_학습용",
-    "provider": "TypeCast",
-    "description": "",
-    "voiceId": "늑대경제학_목소리_학습용",
-    "file": "/audio/male/%EB%8A%91%EB%8C%80%EA%B2%BD%EC%A0%9C%ED%95%99_%EB%AA%A9%EC%86%8C%EB%A6%AC_%ED%95%99%EC%8A%B5%EC%9A%A9.mp3"
-  },
-  {
     "id": "male-대길",
     "category": "male",
     "name": "대길",

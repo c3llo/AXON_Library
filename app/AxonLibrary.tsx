@@ -160,7 +160,7 @@ export default function AxonLibrary() {
             onClick={() => selectTab("voice")}
           >
             Voice
-            <span className="tab-badge">92</span>
+            <span className="tab-badge">91</span>
           </button>
           <button
             type="button"
@@ -258,7 +258,7 @@ export default function AxonLibrary() {
 
           <div className="voice-toolbar">
             <div className="gender-tabs" role="group" aria-label="음성 성별">
-              <button type="button" className={category === "male" ? "active" : ""} onClick={() => setCategory("male")}>남자 <span>48</span></button>
+              <button type="button" className={category === "male" ? "active" : ""} onClick={() => setCategory("male")}>남자 <span>47</span></button>
               <button type="button" className={category === "female" ? "active" : ""} onClick={() => setCategory("female")}>여자 <span>44</span></button>
             </div>
 

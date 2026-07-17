@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
 import test from "node:test";
+import { VOICES } from "../app/data/voices.js";
 
 async function render() {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
@@ -23,9 +24,15 @@ test("server-renders the AXON software library", async () => {
   assert.match(html, /<title>AXON Software Library<\/title>/i);
   assert.match(html, /AXON Studio/);
   assert.match(html, /AXON StoryLab/);
-  assert.match(html, /Voice/);
+  assert.match(html, /Voice<span class="tab-badge">91<\/span>/);
   assert.match(html, /이미지<span class="tab-badge">8<\/span>/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/);
+});
+
+test("excludes the removed training voice", () => {
+  assert.equal(VOICES.length, 91);
+  assert.equal(VOICES.filter((voice) => voice.category === "male").length, 47);
+  assert.equal(VOICES.some((voice) => voice.name === "늑대경제학_목소리_학습용"), false);
 });
 
 test("ships every image style preview and copyable prompt", async () => {
