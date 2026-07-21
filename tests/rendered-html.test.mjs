@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
 import test from "node:test";
+import { runInNewContext } from "node:vm";
 import { VOICES } from "../app/data/voices.js";
 
 async function render() {
@@ -31,6 +32,7 @@ test("server-renders the AXON software library", async () => {
   assert.match(html, /04(?:<!-- -->)? PROGRAMS/);
   assert.match(html, /Voice<span class="tab-badge">91<\/span>/);
   assert.match(html, /이미지<span class="tab-badge">8<\/span>/);
+  assert.match(html, /Remotion<span class="tab-badge">427<\/span>/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/);
 });
 
@@ -51,5 +53,22 @@ test("ships every image style preview and copyable prompt", async () => {
     await access(imageUrl);
     const prompt = await readFile(promptUrl, "utf8");
     assert.ok(prompt.length > 1000, `${style.id} prompt should contain the full style instructions`);
+  }
+});
+
+test("ships the complete Remotion animation catalog", async () => {
+  const catalogUrl = new URL("../public/remotion-catalog/catalog-data.js", import.meta.url);
+  const source = await readFile(catalogUrl, "utf8");
+  const context = { window: {} };
+  runInNewContext(source, context);
+
+  const catalog = context.window.REMOTION_CATALOG;
+  assert.ok(Array.isArray(catalog));
+  assert.equal(catalog.length, 21);
+  const totalItems = catalog.reduce((sum, category) => sum + category.items.length, 0);
+  assert.equal(totalItems, 427);
+
+  for (const file of ["index.html", "details.html", "detail.css", "detail-app.js"]) {
+    await access(new URL(`../public/remotion-catalog/${file}`, import.meta.url));
   }
 });

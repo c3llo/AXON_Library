@@ -1,0 +1,724 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Remotion Animation Action Lab</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080b12;
+      --panel: rgba(19, 24, 38, 0.82);
+      --panel-2: rgba(27, 34, 52, 0.94);
+      --line: rgba(255, 255, 255, 0.09);
+      --text: #f6f7fb;
+      --muted: #aab1c5;
+      --accent: #7c5cff;
+      --accent-2: #23d5ab;
+      --hot: #ff5d8f;
+      --yellow: #ffd166;
+      --radius: 22px;
+      --shadow: 0 28px 80px rgba(0, 0, 0, 0.34);
+      font-family: Inter, Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 10% -10%, rgba(124,92,255,.2), transparent 34%),
+        radial-gradient(circle at 100% 10%, rgba(35,213,171,.14), transparent 26%),
+        linear-gradient(180deg, #090c14, #070910 55%, #090c14);
+      color: var(--text);
+    }
+    button, input, select { font: inherit; }
+    button { color: inherit; }
+
+    .shell { width: min(1540px, calc(100% - 34px)); margin: 0 auto; padding: 34px 0 80px; }
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 38px;
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      background: linear-gradient(135deg, rgba(28,34,54,.92), rgba(12,16,27,.92));
+      box-shadow: var(--shadow);
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 420px;
+      height: 420px;
+      right: -130px;
+      top: -180px;
+      border-radius: 50%;
+      background: conic-gradient(from 120deg, var(--accent), var(--accent-2), var(--hot), var(--accent));
+      filter: blur(70px);
+      opacity: .24;
+      animation: heroGlow 9s linear infinite;
+    }
+    @keyframes heroGlow { to { transform: rotate(360deg) scale(1.12); } }
+
+    .eyebrow {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      padding: 7px 12px;
+      border: 1px solid rgba(124,92,255,.35);
+      border-radius: 999px;
+      background: rgba(124,92,255,.12);
+      color: #cfc5ff;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    h1 { max-width: 900px; margin: 18px 0 12px; font-size: clamp(34px, 5vw, 72px); line-height: .98; letter-spacing: -.055em; }
+    .hero p { position: relative; z-index: 1; max-width: 830px; margin: 0; color: var(--muted); font-size: clamp(15px, 2vw, 19px); line-height: 1.7; }
+    .hero strong { color: #fff; }
+
+    .toolbar {
+      position: sticky;
+      z-index: 30;
+      top: 12px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin: 18px 0;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(10, 13, 22, .82);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 16px 44px rgba(0,0,0,.25);
+    }
+    .toolbar button, .toolbar select, .toolbar input {
+      min-height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255,255,255,.045);
+      color: var(--text);
+      outline: none;
+    }
+    .toolbar button { cursor: pointer; padding: 0 15px; font-weight: 750; }
+    .toolbar button:hover { background: rgba(255,255,255,.09); }
+    .toolbar button.primary { background: linear-gradient(135deg, var(--accent), #5a79ff); border-color: transparent; }
+    .toolbar select { padding: 0 12px; }
+    .toolbar input { flex: 1; min-width: 220px; padding: 0 14px; }
+    .counter { margin-left: auto; padding: 0 8px; color: var(--muted); font-size: 13px; }
+
+    .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .card {
+      display: flex;
+      min-height: 470px;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(24,30,47,.95), rgba(13,17,28,.97));
+      box-shadow: 0 18px 46px rgba(0,0,0,.18);
+      transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+    }
+    .card:hover { transform: translateY(-4px); border-color: rgba(124,92,255,.34); box-shadow: 0 24px 64px rgba(0,0,0,.26); }
+    .card.is-hidden { display: none; }
+    .card-head { display: flex; align-items: flex-start; gap: 12px; padding: 18px 18px 14px; }
+    .num {
+      flex: 0 0 auto;
+      display: grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(124,92,255,.25), rgba(35,213,171,.18));
+      border: 1px solid rgba(255,255,255,.08);
+      color: #e5e1ff;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+    }
+    .card h2 { margin: 0; font-size: 18px; letter-spacing: -.025em; }
+    .card-sub { margin-top: 4px; color: var(--muted); font-size: 12px; }
+    .preview {
+      position: relative;
+      display: grid;
+      min-height: 225px;
+      place-items: center;
+      overflow: hidden;
+      margin: 0 14px;
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 17px;
+      background:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px),
+        radial-gradient(circle at 50% 40%, rgba(124,92,255,.12), transparent 46%),
+        #0a0e18;
+      background-size: 24px 24px, 24px 24px, auto, auto;
+      isolation: isolate;
+    }
+    .preview::after {
+      content: "PREVIEW";
+      position: absolute;
+      top: 10px;
+      right: 11px;
+      z-index: 9;
+      color: rgba(255,255,255,.24);
+      font-size: 9px;
+      font-weight: 900;
+      letter-spacing: .14em;
+    }
+    .content { flex: 1; padding: 15px 18px 8px; }
+    .content p { min-height: 44px; margin: 0 0 12px; color: var(--muted); font-size: 13px; line-height: 1.55; }
+    .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .tag { padding: 5px 8px; border-radius: 8px; background: rgba(255,255,255,.05); color: #c9cede; font: 700 10px/1.1 ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .card-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 13px 18px 17px; }
+    .card-foot span { color: #858da4; font-size: 11px; }
+    .replay {
+      border: 1px solid rgba(124,92,255,.28);
+      border-radius: 10px;
+      background: rgba(124,92,255,.12);
+      padding: 8px 11px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .replay:hover { background: rgba(124,92,255,.22); }
+
+    .card-actions { display:flex; align-items:center; gap:7px; }
+    .details-link { display:inline-flex; min-height:34px; align-items:center; padding:0 11px; border:1px solid rgba(35,213,171,.3); border-radius:10px; background:rgba(35,213,171,.1); color:#bdf8e7; font-size:11px; font-weight:850; text-decoration:none; white-space:nowrap; }
+    .details-link:hover { background:rgba(35,213,171,.2); }
+
+    .paused *, .paused *::before, .paused *::after { animation-play-state: paused !important; }
+
+    /* 01 Path */
+    .track { position: relative; width: 230px; height: 140px; }
+    .track svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+    .track path { fill: none; stroke: rgba(255,255,255,.13); stroke-width: 3; stroke-dasharray: 7 7; }
+    .traveler {
+      position: absolute;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #fff, #a495ff 35%, #6344ff 70%);
+      box-shadow: 0 0 26px rgba(124,92,255,.9);
+      offset-path: path("M 10 118 C 40 16, 175 8, 215 105 C 178 142, 70 150, 10 118");
+      animation: travel 4.6s ease-in-out infinite;
+    }
+    @keyframes travel { 0%,100%{offset-distance:0%} 50%{offset-distance:100%} }
+
+    /* 02 Morph */
+    .blob {
+      width: 110px; height: 110px;
+      background: linear-gradient(135deg, #7c5cff, #23d5ab);
+      box-shadow: 0 24px 60px rgba(35,213,171,.25);
+      animation: morph 3.4s ease-in-out infinite;
+    }
+    @keyframes morph {
+      0%,100% { transform: scale(.72, 1.15) rotate(-8deg); border-radius: 50% 35% 62% 38% / 42% 58% 40% 60%; }
+      50% { transform: scale(1.18, .72) rotate(11deg); border-radius: 18% 72% 28% 64% / 67% 20% 73% 35%; }
+    }
+
+    /* 03 3D flip */
+    .flip-scene { width: 150px; height: 105px; perspective: 700px; }
+    .flip-card { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; animation: flipCard 3.2s cubic-bezier(.2,.75,.2,1) infinite; }
+    .face { position: absolute; inset: 0; display:grid; place-items:center; border-radius: 18px; backface-visibility: hidden; font-weight: 900; letter-spacing: .08em; }
+    .front { background: linear-gradient(135deg,#7c5cff,#5b77ff); }
+    .back { background: linear-gradient(135deg,#23d5ab,#0e8e83); transform: rotateY(180deg); }
+    @keyframes flipCard { 0%,15%{transform:rotateY(0) skewY(0)} 50%,65%{transform:rotateY(180deg) skewY(-3deg)} 100%{transform:rotateY(360deg)} }
+
+    /* 04 opacity */
+    .fade-stack { width: 190px; display: grid; gap: 10px; }
+    .fade-line { height: 24px; border-radius: 7px; background: linear-gradient(90deg,rgba(124,92,255,.95),rgba(35,213,171,.72)); opacity: 0; transform: translateY(12px); animation: fadeLine 2.5s ease-in-out infinite; }
+    .fade-line:nth-child(2){width:78%;animation-delay:.18s}.fade-line:nth-child(3){width:58%;animation-delay:.36s}.fade-line:nth-child(4){width:86%;animation-delay:.54s}
+    @keyframes fadeLine { 0%,12%,100%{opacity:0;transform:translateY(12px)} 38%,70%{opacity:1;transform:translateY(0)} 88%{opacity:0;transform:translateY(-8px)} }
+
+    /* 05 color */
+    .color-orb { width: 125px;height:125px;border-radius:50%; background:linear-gradient(135deg,#7c5cff,#23d5ab); box-shadow: 0 0 45px currentColor; animation: colorFlow 4s linear infinite; }
+    @keyframes colorFlow { 0%{filter:hue-rotate(0deg) saturate(1.1);transform:rotate(0) scale(.92)} 50%{filter:hue-rotate(180deg) saturate(1.8);transform:rotate(180deg) scale(1.08)} 100%{filter:hue-rotate(360deg) saturate(1.1);transform:rotate(360deg) scale(.92)} }
+
+    /* 06 box */
+    .box-style { width: 130px;height:100px;display:grid;place-items:center;background:rgba(124,92,255,.15);border:3px solid #8e79ff;color:#fff;font-weight:900;animation:boxStyle 3s ease-in-out infinite; }
+    @keyframes boxStyle { 0%,100%{border-radius:4px;box-shadow:0 0 0 rgba(124,92,255,0);border-width:2px} 50%{border-radius:48px;box-shadow:0 18px 45px rgba(124,92,255,.65), inset 0 0 24px rgba(35,213,171,.18);border-width:7px} }
+
+    /* 07 clipping */
+    .mask-art { width: 190px;height:126px;border-radius:18px;background: radial-gradient(circle at 25% 25%,#ffd166 0 8%,transparent 9%), linear-gradient(135deg,#ff5d8f,#7c5cff 48%,#23d5ab); clip-path: inset(0 100% 0 0 round 18px); animation:revealMask 3.2s cubic-bezier(.65,0,.25,1) infinite; }
+    .mask-art::after { content:"REVEAL";position:absolute;inset:0;display:grid;place-items:center;font-size:22px;font-weight:1000;letter-spacing:.1em; }
+    @keyframes revealMask { 0%,10%{clip-path:circle(0% at 50% 50%)} 55%,72%{clip-path:circle(75% at 50% 50%)} 100%{clip-path:circle(0% at 80% 20%)} }
+
+    /* 08 filter */
+    .filter-scene { position:relative;width:185px;height:125px;border-radius:18px;overflow:hidden;background:linear-gradient(135deg,#ffcf6e,#ff628f 46%,#635dff);animation:filterFX 4s ease-in-out infinite; }
+    .filter-scene::before { content:"";position:absolute;width:72px;height:72px;border-radius:50%;left:28px;top:22px;background:#fff;opacity:.75;box-shadow:100px 54px 0 12px rgba(0,0,0,.3); }
+    .filter-scene::after { content:"FILTER";position:absolute;right:12px;bottom:10px;font-size:17px;font-weight:1000; }
+    @keyframes filterFX { 0%,100%{filter:blur(0) brightness(1) saturate(1) hue-rotate(0)} 35%{filter:blur(5px) brightness(1.45) saturate(2) hue-rotate(75deg)} 65%{filter:blur(1px) contrast(1.8) grayscale(.65) hue-rotate(220deg)} }
+
+    /* 09 svg */
+    .draw-svg { width: 190px; height: 140px; }
+    .draw-svg path { fill:none;stroke:url(#grad09);stroke-width:9;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:360;stroke-dashoffset:360;animation:drawPath 3s ease-in-out infinite; }
+    @keyframes drawPath { 0%,12%{stroke-dashoffset:360} 62%,80%{stroke-dashoffset:0} 100%{stroke-dashoffset:-360} }
+
+    /* 10 type */
+    .kinetic { display:flex; gap:2px; font-size:30px; font-weight:1000; letter-spacing:-.06em; }
+    .kinetic span { display:inline-block; animation:letterPop 1.8s cubic-bezier(.18,.9,.25,1.35) infinite; animation-delay:calc(var(--i) * .08s); }
+    @keyframes letterPop { 0%,100%{transform:translateY(0) rotate(0);color:#eaeaff} 35%{transform:translateY(-24px) rotate(calc((var(--i) - 3) * 2deg));color:#8e79ff;text-shadow:0 10px 24px rgba(124,92,255,.6)} 58%{transform:translateY(4px);color:#23d5ab} }
+
+    /* 11 UI */
+    .ui-demo { width:200px;display:grid;gap:13px; }
+    .ui-toggle { position:relative;width:70px;height:38px;border-radius:999px;background:#2f3547;animation:toggleBg 2.8s ease-in-out infinite; }
+    .ui-knob { position:absolute;width:30px;height:30px;top:4px;left:4px;border-radius:50%;background:#fff;box-shadow:0 5px 16px rgba(0,0,0,.35);animation:toggleKnob 2.8s ease-in-out infinite; }
+    .ui-toast { padding:13px 14px;border:1px solid rgba(255,255,255,.1);border-radius:13px;background:rgba(255,255,255,.07);transform:translateX(125%);animation:toast 2.8s cubic-bezier(.16,.9,.25,1) infinite; }
+    .ui-toast strong { display:block;font-size:12px}.ui-toast small{color:var(--muted)}
+    @keyframes toggleBg { 0%,20%,100%{background:#303648} 45%,78%{background:#23d5ab} }
+    @keyframes toggleKnob { 0%,20%,100%{transform:translateX(0)} 45%,78%{transform:translateX(32px)} }
+    @keyframes toast { 0%,25%,100%{transform:translateX(125%);opacity:0} 48%,78%{transform:translateX(0);opacity:1} }
+
+    /* 12 data */
+    .chart { position:relative;width:210px;height:140px;border-left:2px solid rgba(255,255,255,.14);border-bottom:2px solid rgba(255,255,255,.14);display:flex;align-items:flex-end;gap:11px;padding:0 10px; }
+    .bar { width:25px;border-radius:7px 7px 1px 1px;background:linear-gradient(180deg,#8f7aff,#23d5ab);height:var(--h);transform-origin:bottom;animation:barGrow 2.8s cubic-bezier(.18,.85,.25,1) infinite;animation-delay:calc(var(--i)*.12s); }
+    @keyframes barGrow { 0%,12%,100%{transform:scaleY(.04);opacity:.25} 48%,82%{transform:scaleY(1);opacity:1} }
+
+    /* 13 transitions */
+    .transition-stage { position:relative;width:210px;height:135px;border-radius:18px;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.3); }
+    .slide-a,.slide-b{position:absolute;inset:0;display:grid;place-items:center;font-size:28px;font-weight:1000;letter-spacing:.08em}
+    .slide-a{background:linear-gradient(135deg,#7c5cff,#ff5d8f);animation:slideA 4s ease-in-out infinite}.slide-b{background:linear-gradient(135deg,#23d5ab,#1476ff);clip-path:inset(0 100% 0 0);animation:slideB 4s cubic-bezier(.7,0,.2,1) infinite}
+    @keyframes slideA{0%,35%{transform:scale(1);filter:blur(0)}55%,82%{transform:scale(1.2);filter:blur(7px)}100%{transform:scale(1)}}
+    @keyframes slideB{0%,30%{clip-path:inset(0 100% 0 0)}55%,82%{clip-path:inset(0 0 0 0)}100%{clip-path:inset(0 0 0 100%)}}
+
+    /* 14 parallax */
+    .parallax { position:relative;width:210px;height:145px;perspective:600px; }
+    .layer { position:absolute;border-radius:16px;border:1px solid rgba(255,255,255,.13);box-shadow:0 15px 36px rgba(0,0,0,.25); }
+    .layer.back{inset:28px 10px 5px 45px;background:linear-gradient(135deg,#18263c,#20465a);animation:paraBack 4s ease-in-out infinite}.layer.mid{inset:18px 30px 18px 25px;background:linear-gradient(135deg,rgba(124,92,255,.8),rgba(40,57,108,.75));animation:paraMid 4s ease-in-out infinite}.layer.front{inset:45px 55px 32px 5px;background:linear-gradient(135deg,rgba(255,93,143,.9),rgba(124,92,255,.85));animation:paraFront 4s ease-in-out infinite}
+    @keyframes paraBack{0%,100%{transform:translate3d(-8px,2px,-70px)}50%{transform:translate3d(12px,-5px,-70px)}}
+    @keyframes paraMid{0%,100%{transform:translate3d(0,0,0) rotateY(-5deg)}50%{transform:translate3d(-13px,8px,0) rotateY(5deg)}}
+    @keyframes paraFront{0%,100%{transform:translate3d(15px,0,70px)}50%{transform:translate3d(-18px,-12px,70px)}}
+
+    /* 15 3D cube */
+    .cube-scene { width:105px;height:105px;perspective:600px; }
+    .cube { position:relative;width:100%;height:100%;transform-style:preserve-3d;animation:cubeSpin 5s linear infinite; }
+    .cube-face{position:absolute;inset:0;display:grid;place-items:center;border:2px solid rgba(255,255,255,.2);background:rgba(124,92,255,.55);backdrop-filter:blur(8px);font-weight:900}.cube-face:nth-child(2){transform:rotateY(180deg) translateZ(52px)}.cube-face:nth-child(3){transform:rotateY(90deg) translateZ(52px)}.cube-face:nth-child(4){transform:rotateY(-90deg) translateZ(52px)}.cube-face:nth-child(5){transform:rotateX(90deg) translateZ(52px)}.cube-face:nth-child(6){transform:rotateX(-90deg) translateZ(52px)}.cube-face:first-child{transform:translateZ(52px)}
+    @keyframes cubeSpin{to{transform:rotateX(360deg) rotateY(540deg)}}
+
+    /* 16 canvas common */
+    canvas.fx-canvas { position:absolute;inset:0;width:100%;height:100%; }
+
+    /* 18 media */
+    .media-frame { position:relative;width:205px;height:135px;border-radius:17px;overflow:hidden;background:#111827;box-shadow:0 18px 40px rgba(0,0,0,.3); }
+    .media-image{position:absolute;inset:-18px;background:radial-gradient(circle at 75% 25%,#ffd166 0 8%,transparent 9%),linear-gradient(155deg,#1e3353 0 35%,#2db6a3 36% 53%,#f27392 54% 100%);animation:kenBurns 5.4s ease-in-out infinite}.media-ui{position:absolute;left:10px;right:10px;bottom:10px}.media-time{height:4px;border-radius:999px;background:rgba(255,255,255,.25);overflow:hidden}.media-progress{height:100%;background:#fff;transform-origin:left;animation:progress 5.4s linear infinite}.media-pill{margin-bottom:7px;display:inline-block;padding:5px 8px;border-radius:999px;background:rgba(0,0,0,.46);font-size:10px;font-weight:900}
+    @keyframes kenBurns{0%,100%{transform:scale(1.05) translate(-4px,4px)}50%{transform:scale(1.34) translate(12px,-8px)}}@keyframes progress{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+    /* 20 physics */
+    .pendulum{position:relative;width:170px;height:150px}.pivot{position:absolute;top:10px;left:50%;width:15px;height:15px;border-radius:50%;background:#fff;transform:translateX(-50%);box-shadow:0 0 15px rgba(255,255,255,.7)}.arm{position:absolute;left:50%;top:17px;width:3px;height:102px;background:linear-gradient(#fff,rgba(255,255,255,.15));transform-origin:top;animation:pendulum 2.4s cubic-bezier(.45,.05,.55,.95) infinite}.weight{position:absolute;left:50%;bottom:-24px;width:48px;height:48px;border-radius:50%;transform:translateX(-50%);background:radial-gradient(circle at 35% 30%,#fff,#ff8fb0 35%,#7c5cff 75%);box-shadow:0 18px 34px rgba(124,92,255,.5)}
+    @keyframes pendulum{0%,100%{transform:rotate(42deg)}50%{transform:rotate(-42deg)}}
+
+    /* 21 timing */
+    .timing{width:220px;display:grid;gap:12px}.lane{position:relative;height:26px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden}.lane::before{content:attr(data-label);position:absolute;z-index:3;left:8px;top:5px;color:rgba(255,255,255,.58);font:800 9px/1 ui-monospace,monospace}.dot{position:absolute;top:5px;left:5px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 0 18px rgba(255,255,255,.6);animation-duration:2.8s;animation-iteration-count:infinite;animation-direction:alternate}.linear{animation-name:timingMove;animation-timing-function:linear}.ease{animation-name:timingMove;animation-timing-function:cubic-bezier(.16,.84,.44,1)}.steps{animation-name:timingMove;animation-timing-function:steps(6)}.bounce{animation-name:timingBounce;animation-timing-function:cubic-bezier(.2,.9,.25,1.35)}
+    @keyframes timingMove{to{transform:translateX(189px)}}@keyframes timingBounce{0%{transform:translateX(0)}70%{transform:translateX(201px)}85%{transform:translateX(177px)}100%{transform:translateX(189px)}}
+
+    .empty { display:none; padding:70px 20px; text-align:center; color:var(--muted); }
+    .empty.show { display:block; }
+    footer { margin-top: 28px; padding: 24px; text-align:center; color:#7e879d; font-size:12px; }
+
+    @media (max-width: 1120px){ .grid{grid-template-columns:repeat(2,minmax(0,1fr))} }
+    @media (max-width: 720px){
+      .shell{width:min(100% - 20px,1540px);padding-top:10px}.hero{padding:25px 22px}.toolbar{top:6px}.grid{grid-template-columns:1fr}.card{min-height:440px}.counter{width:100%;margin-left:0}.hero h1{font-size:42px}
+    }
+    @media (prefers-reduced-motion: reduce){ body:not(.motion-on) *,body:not(.motion-on) *::before,body:not(.motion-on) *::after{animation-play-state:paused!important} }
+    body{background:#07101d}.shell{width:min(1460px,calc(100% - 24px));padding:18px 0 52px}.hero{display:none}.toolbar{top:8px;margin:0 0 16px;border-color:rgba(155,179,214,.16);border-radius:6px;background:rgba(9,19,33,.94)}.toolbar button,.toolbar select,.toolbar input{border-radius:4px}.toolbar button.primary{background:linear-gradient(100deg,#6551d1,#3388ff)}.card{border-color:rgba(155,179,214,.16);border-radius:6px;background:linear-gradient(145deg,rgba(13,27,45,.95),rgba(8,18,31,.94))}.card:hover{border-color:rgba(86,145,236,.42)}.num,.preview,.replay,.details-link{border-radius:4px}.preview{background-color:#08111e}.details-link{color:#9ad5ff;border-color:rgba(51,136,255,.32);background:rgba(51,136,255,.1)}footer{color:#53647d}
+    @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
+  </style>
+</head>
+<body class="motion-on">
+  <main class="shell">
+    <section class="hero">
+      <span class="eyebrow">21 categories · 427 detailed actions</span>
+      <h1>Remotion이 표현할 수 있는 애니메이션을 한 화면에서 확인하세요.</h1>
+      <p>각 카드는 <strong>21가지 애니메이션 카테고리</strong>를 대표합니다. 카드를 통해 총 <strong>427개 세부 항목</strong>의 개별 데모 페이지로 이동하고, 각 효과를 검색·재생·비교할 수 있습니다.</p>
+    </section>
+
+    <section class="toolbar" aria-label="애니메이션 제어 도구">
+      <button class="primary" id="playAll">▶ 전체 재생</button>
+      <button id="pauseAll">Ⅱ 전체 정지</button>
+      <button id="replayAll">↻ 전체 다시 보기</button>
+      <select id="speed" aria-label="재생 속도">
+        <option value="0.5">0.5×</option>
+        <option value="1" selected>1×</option>
+        <option value="1.5">1.5×</option>
+        <option value="2">2×</option>
+      </select>
+      <input id="search" type="search" placeholder="예: 텍스트, SVG, 파티클, 전환..." />
+      <span class="counter" id="counter">21 / 21개 표시</span>
+    </section>
+
+    <section class="grid" id="grid">
+      <article class="card" data-reset="path" data-search="위치 경로 이동 translate path orbit wave 흔들림 바운스 position">
+        <header class="card-head"><span class="num">01</span><div><h2>위치·경로 애니메이션</h2><div class="card-sub">Position & Path Motion</div></div></header>
+        <div class="preview"><div class="track"><svg viewBox="0 0 230 140" aria-hidden="true"><path d="M10 118 C40 16 175 8 215 105 C178 142 70 150 10 118" /></svg><div class="traveler"></div></div></div>
+        <div class="content"><p>직선 이동뿐 아니라 곡선, 원형 궤도, 웨이브, 관성, 흔들림과 경로 추적을 표현합니다.</p><div class="tags"><span class="tag">translate</span><span class="tag">offset-path</span><span class="tag">orbit</span><span class="tag">shake</span></div></div>
+        <footer class="card-foot"><span>대표 데모: 곡선 경로 왕복</span><button class="replay">↻ 다시 보기</button></footer>
+      </article>
+
+      <article class="card" data-search="크기 스케일 형태 width height scale morph squash stretch pulse">
+        <header class="card-head"><span class="num">02</span><div><h2>크기·스케일·형태 변화</h2><div class="card-sub">Scale & Morph</div></div></header>
+        <div class="preview"><div class="blob"></div></div>
+        <div class="content"><p>확대·축소, 축별 변형, squash & stretch, 도형의 형태 변화와 펄스를 구현합니다.</p><div class="tags"><span class="tag">scale</span><span class="tag">scaleX/Y</span><span class="tag">morph</span><span class="tag">pulse</span></div></div>
+        <footer class="card-foot"><span>대표 데모: 블롭 모핑</span><button class="replay">↻ 다시 보기</button></footer>
+      </article>
+
+      <article class="card" data-search="회전 기울기 왜곡 rotate skew perspective flip 3d">
+        <header class="card-head"><span class="num">03</span><div><h2>회전·기울기·왜곡</h2><div class="card-sub">Rotate, Skew & Perspective</div></div></header>
+        <div class="preview"><div class="flip-scene"><div class="flip-card"><div class="face front">FRONT</div><div class="face back">BACK</div></div></div></div>
+        <div class="content"><p>2D/3D 회전, 카드 플립, skew, perspective와 transform-origin 변화를 다룹니다.</p><div class="tags"><span class="tag">rotateX/Y/Z</span><span class="tag">skew</span><span class="tag">perspective</span></div></div>
+        <footer class="card-foot"><span>대표 데모: 3D 카드 플립</span><button class="replay">↻ 다시 보기</button></footer>
+      </article>
+
+      <article class="card" data-search="투명도 등장 퇴장 fade opacity crossfade stagger reveal">
+        <header class="card-head"><span class="num">04</span><div><h2>투명도·등장·퇴장</h2><div class="card-sub">Opacity, Entrance & Exit</div></div></header>
+        <div class="preview"><div class="fade-stack"><div class="fade-line"></div><div class="fade-line"></div><div class="fade-line"></div><div class="fade-line"></div></div></div>
+        <div class="content"><p>페이드, 크로스페이드, 순차 등장, 잔상과 마스크 결합형 등장 효과를 설계합니다.</p><div class="tags"><span class="tag">opacity</span><span class="tag">fade</span><span class="tag">stagger</span><span class="tag">crossfade</span></div></div>
+        <footer class="card-foot"><span>대표 데모: 스태거 페이드</span><button class="replay">↻ 다시 보기</button></footer>
+      </article>
+
+      <article class="card" data-search="색상 컬러 gradient hue interpolate colors fill stroke">
+        <header class="card-head"><span class="num">05</span><div><h2>색상 애니메이션</h2><div class="card-sub">Color & Gradient</div></div></header>
+        <div class="preview"><div class="color-orb"></div></div>
+        <div class="content"><p>배경·텍스트·SVG·그라디언트 색을 보간하고 hue, 채도, 밝기를 시간에 따라 바꿉니다.</p><div class="tags"><span class="tag">interpolateColors</span><span class="tag">hue</span><span class="tag">gradient</span></div></div>
+        <footer class="card-foot"><span>대표 데모: 컬러 플로우</span><button class="replay">↻ 다시 보기</button></footer>
+      </article>
+
+      <article class="card" data-search="테두리 모서리 박스 radius border shadow glow padding gap">
+        <header class="card-head"><span class="num">06</span><div><h2>테두리·모서리·박스 스타일</h2><div class="card-sub">Border, Radius & Shadow</div></div></header>
+        <div class="preview"><div class="box-style">BOX</div></div>
+        <div class="content"><p>border-radius, 두께, 그림자, 네온, 간격과 박스 레이아웃 변화까지 애니메이션화합니다.</p><div class="tags"><span class="tag">borderRadius</span><span class="tag">boxShadow</span><span class="tag">borderWidth</span></div></div>
+        <footer class="card-foot"><span>대표 데모: 라운드·글로우</span><button class="replay">↻ 다시 보기</button></footer>
+      </article>
+
+      <article class="card" data-search="마스크 클리핑 리빌 clip path mask reveal wipe iris">
+        <header class="card-head"><span class="num">07</span><div><h2>마스크·클리핑·리빌</h2><div class="card-sub">Mask, Clip & Reveal</div></div></header>
+        <div class="preview"><div class="mask-art"></div></div>
+        <div class="content"><p>원형 아이리스, wipe, polygon, SVG 마스크와 글자 모양 안쪽 리빌을 구현합니다.</p><div class="tags"><span class="tag">clip-path</span><span class="tag">mask</span><span class="tag">iris</span><span class="tag">wipe</span></div></div>
+        <footer class="card-foot"><span>대표 데모: 원형 아이리스</span><button class="replay">↻ 다시 보기</button></footer>
+      </article>
+
+      <article class="card" data-search="블러 빛 색보정 필터 blur brightness contrast saturation glow glitch">
+        <header class="card-head"><span class="num">08</span><div><h2>블러·빛·색보정·필터</h2><div class="card-sub">Blur, Light & Filters</div></div></header>
+        <div class="preview"><div class="filter-scene"></div></div>
+        <div class="content"><p>블러, 밝기, 대비, 채도, 색조, 글로우, 글리치와 복합 필터 효과를 적용합니다.</p><div class="tags"><span class="tag">filter</span><span class="tag">blur</span><span class="tag">contrast</span><span class="tag">glow</span></div></div>
+        <footer class="card-foot"><span>대표 데모: 필터 멀티패스</span><button class="replay">↻ 다시 보기</button></footer>
+      </article>
+
+      <article class="card" data-search="svg 벡터 path stroke dash draw morph line logo">
+        <header class="card-head"><span class="num">09</span><div><h2>SVG·벡터 애니메이션</h2><div class="card-sub">SVG Path & Vector</div></div></header>
+        <div class="preview"><svg class="draw-svg" viewBox="0 0 210 160" role="img" aria-label="체크 패스가 그려지는 애니메이션"><defs><linearGradient id="grad09"><stop stop-color="#7c5cff"/><stop offset="1" stop-color="#23d5ab"/></linearGradient></defs><path d="M30 85 L75 125 L180 35"/></svg></div>
+        <div class="content"><p>stroke-dashoffset 기반 선 그리기, path morph, 로고 드로잉과 경로 추적에 적합합니다.</p><div class="tags"><span class="tag">strokeDashoffset</span><span class="tag">path morph</span><span class="tag">vector</span></div></div>
+        <footer class="card-foot"><span>대표 데모: 체크 패스 드로잉</span><button class="replay">↻ 다시 보기</button></footer>
+      </article>
+
+      <article class="card" data-search="텍스트 타이포그래피 typewriter kinetic typography letter word caption">
+        <header class="card-head"><span class="num">10</span><div><h2>텍스트·타이포그래피</h2><div class="card-sub">Kinetic Typography</div></div></header>
+        <div class="preview"><div class="kinetic" aria-label="REMOTION"><span style="--i:0">R</span><span style="--i:1">E</span><span style="--i:2">M</span><span style="--i:3">O</span><span style="--i:4">T</span><span style="--i:5">I</span><span style="--i:6">O</span><span style="--i:7">N</span></div></div>
+        <div class="content"><p>타자기, 글자·단어별 등장, 카운트업, 웨이브, 강조 자막과 kinetic type을 만듭니다.</p><div class="tags"><span class="tag">typewriter</span><span class="tag">letter stagger</span><span class="tag">caption</span></div></div>
+        <footer class="card-foot"><span>대표 데모: 글자별 팝</span><button class="replay">↻ 다시 보기</button></footer>
+      </article>
+
+      <article class="card" data-search="ui 인터페이스 버튼 토글 모달 토스트 스크롤 cursor app">
+        <header class="card-head"><span class="num">11</span><div><h2>UI·인터페이스 애니메이션</h2><div class="card-sub">UI & Product Motion</div></div></header>
+        <div class="preview"><div class="ui-demo"><div class="ui-toggle"><div class="ui-knob"></div></div><div class="ui-toast"><strong>설정이 저장되었습니다</strong><small>Product UI motion</small></div></div></div>
+        <div class="content"><p>버튼, 토글, 모달, 토스트, 커서, 모바일 스와이프와 앱 화면 조작을 재현합니다.</p><div class="tags"><span class="tag">toggle</span><span class="tag">toast</span><span class="tag">modal</span><span class="tag">cursor</span></div></div>
+        <footer class="card-foot"><span>대표 데모: 토글 + 토스트</span><button class="replay">↻ 다시 보기</button></footer>
+      </article>
+
+      <article class="card" data-search="데이터 시각화 차트 bar line pie counter graph visualization">
+        <header class="card-head"><span class="num">12</span><div><h2>데이터 시각화</h2><div class="card-sub">Charts & Metrics</div></div></header>
+        <div class="preview"><div class="chart"><div class="bar" style="--h:42%;--i:0;height:42%"></div><div class="bar" style="--h:78%;--i:1;height:78%"></div><div class="bar" style="--h:58%;--i:2;height:58%"></div><div class="bar" style="--h:92%;--i:3;height:92%"></div><div class="bar" style="--h:67%;--i:4;height:67%"></div></div></div>
+        <div class="content"><p>막대 성장, 라인 드로잉, 숫자 카운트, 도넛, 게이지와 순위 변화를 보여줍니다.</p><div class="tags"><span class="tag">bar chart</span><span class="tag">line draw</span><span class="tag">counter</span><span class="tag">gauge</span></div></div>
+        <footer class="card-foot"><span>대표 데모: 막대그래프 성장</span><button class="replay">↻ 다시 보기</button></footer>
+      </article>
+
+      <article class="card" data-search="장면 전환 transition fade slide wipe flip dissolve zoom film burn">
+        <header class="card-head"><span class="num">13</span><div><h2>장면 전환</h2><div class="card-sub">Scene Transitions</div></div></header>
+        <div class="preview"><div class="transition-stage"><div class="slide-a">SCENE A</div><div class="slide-b">SCENE B</div></div></div>
+        <div class="content"><p>fade, slide, wipe, iris, blur, dissolve, cube와 사용자 정의 장면 전환을 구성합니다.</p><div class="tags"><span class="tag">TransitionSeries</span><span class="tag">wipe</span><span class="tag">crossfade</span></div></div>
+        <footer class="card-foot"><span>대표 데모: 블러 + 와이프</span><button class="replay">↻ 다시 보기</button></footer>
+      </article>
+
+      <article class="card" data-search="카메라 2.5d parallax pan tilt zoom ken burns depth">
+        <header class="card-head"><span class="num">14</span><div><h2>카메라·2.5D 애니메이션</h2><div class="card-sub">Camera & Parallax</div></div></header>
+        <div class="preview"><div class="parallax"><div class="layer back"></div><div class="layer mid"></div><div class="layer front"></div></div></div>
+        <div class="content"><p>레이어별 속도를 달리해 parallax, pan, tilt, zoom, Ken Burns와 가상 깊이를 만듭니다.</p><div class="tags"><span class="tag">parallax</span><span class="tag">camera</span><span class="tag">depth</span><span class="tag">ken-burns</span></div></div>
+        <footer class="card-foot"><span>대표 데모: 3레이어 패럴랙스</span><button class="replay">↻ 다시 보기</button></footer>
+      </article>
+
+      <article class="card" data-search="실제 3d three react three fiber cube model lighting camera">
+        <header class="card-head"><span class="num">15</span><div><h2>실제 3D 애니메이션</h2><div class="card-sub">Three.js / React Three Fiber</div></div></header>
+        <div class="preview"><div class="cube-scene"><div class="cube"><div class="cube-face">1</div><div class="cube-face">2</div><div class="cube-face">3</div><div class="cube-face">4</div><div class="cube-face">5</div><div class="cube-face">6</div></div></div></div>
+        <div class="content"><p>3D 모델, 카메라, 조명, 재질, 텍스처와 제품 360도 회전을 프레임 기반으로 제어합니다.</p><div class="tags"><span class="tag">@remotion/three</span><span class="tag">R3F</span><span class="tag">model</span><span class="tag">lighting</span></div></div>
+        <footer class="card-foot"><span>대표 데모: 회전 큐브</span><button class="replay">↻ 다시 보기</button></footer>
+      </article>
+
+      <article class="card canvas-card" data-canvas="particles" data-search="파티클 프로시저럴 confetti snow rain fire smoke particle noise">
+        <header class="card-head"><span class="num">16</span><div><h2>파티클·프로시저럴</h2><div class="card-sub">Particles & Procedural</div></div></header>
+        <div class="preview"><canvas class="fx-canvas" aria-label="파티클 애니메이션"></canvas></div>
+        <div class="content"><p>컨페티, 눈, 비, 먼지, 불꽃, 연기, 입자 집합·분해와 noise 기반 움직임을 표현합니다.</p><div class="tags"><span class="tag">particles</span><span class="tag">noise</span><span class="tag">confetti</span><span class="tag">trail</span></div></div>
+        <footer class="card-foot"><span>대표 데모: 컬러 파티클</span><button class="replay">↻ 다시 보기</button></footer>
+      </article>
+
+      <article class="card canvas-card" data-canvas="shader" data-search="shader 픽셀 webgl plasma glitch distortion pixel noise ripple">
+        <header class="card-head"><span class="num">17</span><div><h2>Shader·픽셀 기반</h2><div class="card-sub">Shader & Pixel FX</div></div></header>
+        <div class="preview"><canvas class="fx-canvas" aria-label="픽셀 플라즈마 애니메이션"></canvas></div>
+        <div class="content"><p>pixel displacement, ripple, dissolve, RGB split, plasma와 WebGL/WebGPU 효과를 만듭니다.</p><div class="tags"><span class="tag">shader</span><span class="tag">pixel</span><span class="tag">WebGL</span><span class="tag">distortion</span></div></div>
+        <footer class="card-foot"><span>대표 데모: 픽셀 플라즈마</span><button class="replay">↻ 다시 보기</button></footer>
+      </article>
+
+      <article class="card" data-search="영상 이미지 파일 제어 video image gif lottie rive crop speed freeze loop media">
+        <header class="card-head"><span class="num">18</span><div><h2>영상·이미지·애니메이션 파일 제어</h2><div class="card-sub">Media Playback & Transform</div></div></header>
+        <div class="preview"><div class="media-frame"><div class="media-image"></div><div class="media-ui"><span class="media-pill">KEN BURNS · LOOP</span><div class="media-time"><div class="media-progress"></div></div></div></div></div>
+        <div class="content"><p>크롭, pan & scan, 재생 속도, freeze, loop, GIF, Lottie, Rive와 이미지 시퀀스를 제어합니다.</p><div class="tags"><span class="tag">Video</span><span class="tag">Img</span><span class="tag">Lottie</span><span class="tag">playbackRate</span></div></div>
+        <footer class="card-foot"><span>대표 데모: Ken Burns + 진행률</span><button class="replay">↻ 다시 보기</button></footer>
+      </article>
+
+      <article class="card canvas-card" data-canvas="audio" data-search="오디오 반응형 waveform spectrum equalizer beat audio reactive bass">
+        <header class="card-head"><span class="num">19</span><div><h2>오디오 반응형 애니메이션</h2><div class="card-sub">Audio Reactive Motion</div></div></header>
+        <div class="preview"><canvas class="fx-canvas" aria-label="오디오 반응형 이퀄라이저"></canvas></div>
+        <div class="content"><p>파형, 스펙트럼, 이퀄라이저, beat 기반 확대·흔들림·컷 전환을 설계합니다.</p><div class="tags"><span class="tag">waveform</span><span class="tag">spectrum</span><span class="tag">beat</span><span class="tag">volume</span></div></div>
+        <footer class="card-foot"><span>대표 데모: 시뮬레이션 EQ</span><button class="replay">↻ 다시 보기</button></footer>
+      </article>
+
+      <article class="card" data-search="물리 수학 spring bounce gravity friction pendulum orbit physics math">
+        <header class="card-head"><span class="num">20</span><div><h2>물리·수학 기반 움직임</h2><div class="card-sub">Physics & Mathematical Motion</div></div></header>
+        <div class="preview"><div class="pendulum"><div class="pivot"></div><div class="arm"><div class="weight"></div></div></div></div>
+        <div class="content"><p>spring, bounce, gravity, friction, pendulum, orbit와 sin/noise 기반 움직임을 활용합니다.</p><div class="tags"><span class="tag">spring</span><span class="tag">gravity</span><span class="tag">pendulum</span><span class="tag">sine</span></div></div>
+        <footer class="card-foot"><span>대표 데모: 진자 운동</span><button class="replay">↻ 다시 보기</button></footer>
+      </article>
+
+      <article class="card" data-search="타이밍 easing linear ease bounce elastic stagger sequence loop posterize timing">
+        <header class="card-head"><span class="num">21</span><div><h2>타이밍·이징·시퀀싱</h2><div class="card-sub">Timing, Easing & Sequencing</div></div></header>
+        <div class="preview"><div class="timing"><div class="lane" data-label="LINEAR"><div class="dot linear"></div></div><div class="lane" data-label="EASE OUT"><div class="dot ease"></div></div><div class="lane" data-label="STEPS"><div class="dot steps"></div></div><div class="lane" data-label="OVERSHOOT"><div class="dot bounce"></div></div></div></div>
+        <div class="content"><p>같은 속성도 linear, ease, spring, steps, stagger, loop와 속도 램핑에 따라 전혀 다르게 보입니다.</p><div class="tags"><span class="tag">Easing</span><span class="tag">spring</span><span class="tag">Sequence</span><span class="tag">stagger</span></div></div>
+        <footer class="card-foot"><span>대표 데모: 이징 비교</span><button class="replay">↻ 다시 보기</button></footer>
+      </article>
+    </section>
+    <div class="empty" id="empty">검색 결과가 없습니다.</div>
+    <footer>브라우저 미리보기용 인터랙티브 카탈로그 · 실제 Remotion 구현에서는 각 값을 <code>useCurrentFrame()</code>, <code>interpolate()</code>, <code>spring()</code>에 연결하면 됩니다.</footer>
+  </main>
+
+  <script src="catalog-data.js"></script>
+  <script>
+    (() => {
+      const body = document.body;
+      const cards = [...document.querySelectorAll('.card')];
+      const catalog = window.REMOTION_CATALOG || [];
+      cards.forEach((card, index) => {
+        const category = catalog[index];
+        const footer = card.querySelector('.card-foot');
+        const replayButton = footer.querySelector('.replay');
+        const actions = document.createElement('div');
+        actions.className = 'card-actions';
+        const link = document.createElement('a');
+        link.className = 'details-link';
+        link.href = `details.html?category=${index + 1}`;
+        link.textContent = category ? `세부 ${category.items.length}개 보기 →` : '세부 항목 보기 →';
+        actions.append(link, replayButton);
+        footer.appendChild(actions);
+      });
+      const counter = document.getElementById('counter');
+      const empty = document.getElementById('empty');
+      const speedSelect = document.getElementById('speed');
+      let speed = 1;
+      let paused = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const canvasStates = new Map();
+
+      function getCssAnimations(scope = document) {
+        return scope.getAnimations ? scope.getAnimations({subtree: true}) : [];
+      }
+
+      function setPlaybackRate(rate) {
+        speed = rate;
+        getCssAnimations().forEach(anim => { anim.playbackRate = rate; });
+      }
+
+      function playAll() {
+        paused = false;
+        body.classList.remove('paused');
+        getCssAnimations().forEach(anim => {
+          anim.playbackRate = speed;
+          anim.play();
+        });
+      }
+
+      function pauseAll() {
+        paused = true;
+        body.classList.add('paused');
+        getCssAnimations().forEach(anim => anim.pause());
+      }
+
+      function replayScope(scope) {
+        getCssAnimations(scope).forEach(anim => {
+          anim.cancel();
+          anim.playbackRate = speed;
+          if (paused) anim.pause(); else anim.play();
+        });
+        const canvas = scope.querySelector('canvas');
+        if (canvas && canvasStates.has(canvas)) canvasStates.get(canvas).reset();
+      }
+
+      document.getElementById('playAll').addEventListener('click', playAll);
+      document.getElementById('pauseAll').addEventListener('click', pauseAll);
+      document.getElementById('replayAll').addEventListener('click', () => {
+        cards.forEach(replayScope);
+        if (!paused) playAll();
+      });
+      speedSelect.addEventListener('change', e => setPlaybackRate(Number(e.target.value)));
+      document.querySelectorAll('.replay').forEach(button => button.addEventListener('click', () => replayScope(button.closest('.card'))));
+
+      document.getElementById('search').addEventListener('input', event => {
+        const query = event.target.value.trim().toLowerCase();
+        let visible = 0;
+        cards.forEach(card => {
+          const haystack = (card.dataset.search + ' ' + card.textContent).toLowerCase();
+          const match = !query || haystack.includes(query);
+          card.classList.toggle('is-hidden', !match);
+          if (match) visible += 1;
+        });
+        counter.textContent = `${visible} / ${cards.length}개 표시`;
+        empty.classList.toggle('show', visible === 0);
+      });
+
+      function fitCanvas(canvas) {
+        const rect = canvas.getBoundingClientRect();
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const width = Math.max(1, Math.floor(rect.width * dpr));
+        const height = Math.max(1, Math.floor(rect.height * dpr));
+        if (canvas.width !== width || canvas.height !== height) {
+          canvas.width = width;
+          canvas.height = height;
+        }
+        return {ctx: canvas.getContext('2d'), width, height, dpr};
+      }
+
+      function initParticles(canvas) {
+        let particles = [];
+        let last = performance.now();
+        const reset = () => {
+          const {width, height} = fitCanvas(canvas);
+          particles = Array.from({length: 56}, (_, i) => ({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            vx: (Math.random() - .5) * 1.1,
+            vy: .25 + Math.random() * 1.45,
+            size: 2 + Math.random() * 5,
+            hue: 155 + Math.random() * 190,
+            phase: Math.random() * Math.PI * 2,
+            spin: (Math.random() - .5) * .05,
+            a: .55 + Math.random() * .45
+          }));
+          last = performance.now();
+        };
+        reset();
+        canvasStates.set(canvas, {reset});
+        function frame(now) {
+          const {ctx, width, height} = fitCanvas(canvas);
+          const dt = Math.min(40, now - last) * .06 * speed;
+          last = now;
+          ctx.clearRect(0,0,width,height);
+          ctx.globalCompositeOperation = 'lighter';
+          particles.forEach((p, i) => {
+            if (!paused) {
+              p.phase += .025 * speed;
+              p.x += (p.vx + Math.sin(p.phase) * .22) * dt;
+              p.y += p.vy * dt;
+              if (p.y > height + 16) { p.y = -16; p.x = Math.random() * width; }
+              if (p.x < -16) p.x = width + 16;
+              if (p.x > width + 16) p.x = -16;
+            }
+            ctx.save();
+            ctx.translate(p.x,p.y);
+            ctx.rotate(p.phase * p.spin * 5);
+            ctx.fillStyle = `hsla(${p.hue},90%,65%,${p.a})`;
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = `hsla(${p.hue},90%,60%,.8)`;
+            if (i % 3 === 0) ctx.fillRect(-p.size,-p.size/2,p.size*2,p.size);
+            else { ctx.beginPath(); ctx.arc(0,0,p.size,0,Math.PI*2); ctx.fill(); }
+            ctx.restore();
+          });
+          ctx.globalCompositeOperation = 'source-over';
+          requestAnimationFrame(frame);
+        }
+        requestAnimationFrame(frame);
+      }
+
+      function initShader(canvas) {
+        let start = performance.now();
+        let frozen = 0;
+        const reset = () => { start = performance.now(); frozen = 0; };
+        canvasStates.set(canvas, {reset});
+        function frame(now) {
+          const {ctx, width, height, dpr} = fitCanvas(canvas);
+          const scale = Math.max(4, Math.floor(5 * dpr));
+          const w = Math.ceil(width / scale), h = Math.ceil(height / scale);
+          const image = ctx.createImageData(w, h);
+          if (!paused) frozen = (now - start) * .001 * speed;
+          const t = frozen;
+          for (let y=0; y<h; y++) {
+            for (let x=0; x<w; x++) {
+              const n = Math.sin(x*.23 + t*2.2) + Math.sin(y*.19 - t*1.4) + Math.sin((x+y)*.12 + t*1.8);
+              const r = 120 + 110*Math.sin(n + t);
+              const g = 115 + 110*Math.sin(n + 2.1 + t*.6);
+              const b = 125 + 120*Math.sin(n + 4.1 - t*.4);
+              const i = (y*w+x)*4;
+              image.data[i] = r; image.data[i+1] = g; image.data[i+2] = b; image.data[i+3] = 255;
+            }
+          }
+          const off = document.createElement('canvas'); off.width = w; off.height = h;
+          off.getContext('2d').putImageData(image,0,0);
+          ctx.imageSmoothingEnabled = false;
+          ctx.clearRect(0,0,width,height);
+          ctx.drawImage(off,0,0,width,height);
+          ctx.globalCompositeOperation='screen';
+          const grad=ctx.createRadialGradient(width*.45,height*.42,0,width*.5,height*.5,width*.7);
+          grad.addColorStop(0,'rgba(255,255,255,.18)');grad.addColorStop(1,'rgba(0,0,0,.4)');
+          ctx.fillStyle=grad;ctx.fillRect(0,0,width,height);ctx.globalCompositeOperation='source-over';
+          requestAnimationFrame(frame);
+        }
+        requestAnimationFrame(frame);
+      }
+
+      function initAudio(canvas) {
+        let phase = 0;
+        const reset = () => { phase = 0; };
+        canvasStates.set(canvas, {reset});
+        function frame() {
+          const {ctx,width,height,dpr} = fitCanvas(canvas);
+          if (!paused) phase += .045 * speed;
+          ctx.clearRect(0,0,width,height);
+          const bars = 24, gap = 3*dpr, bw = (width - gap*(bars-1))/bars;
+          for (let i=0;i<bars;i++) {
+            const beat = Math.pow((Math.sin(phase*1.9)+1)/2,4);
+            const wave = (Math.sin(phase*2.5 + i*.52)+1)/2;
+            const shape = Math.sin((i/(bars-1))*Math.PI);
+            const h = (18 + (wave*.46 + beat*.65)*shape*height*.75)*dpr/Math.max(dpr,1);
+            const x = i*(bw+gap), y=(height-h)/2;
+            const grad=ctx.createLinearGradient(0,y,0,y+h);
+            grad.addColorStop(0,`hsla(${250+i*4},90%,70%,1)`);grad.addColorStop(1,`hsla(${165+i*3},85%,50%,1)`);
+            ctx.fillStyle=grad;ctx.shadowBlur=12*dpr;ctx.shadowColor='rgba(124,92,255,.5)';
+            ctx.beginPath();
+            const radius=Math.min(bw/2,4*dpr);
+            ctx.roundRect(x,y,bw,h,radius);ctx.fill();
+          }
+          ctx.shadowBlur=0;
+          requestAnimationFrame(frame);
+        }
+        requestAnimationFrame(frame);
+      }
+
+      document.querySelectorAll('[data-canvas]').forEach(card => {
+        const canvas = card.querySelector('canvas');
+        const type = card.dataset.canvas;
+        if (type === 'particles') initParticles(canvas);
+        if (type === 'shader') initShader(canvas);
+        if (type === 'audio') initAudio(canvas);
+      });
+
+      window.addEventListener('resize', () => document.querySelectorAll('canvas').forEach(fitCanvas));
+      if (paused) pauseAll(); requestAnimationFrame(() => setPlaybackRate(1));
+    })();
+  </script>
+</body>
+</html>

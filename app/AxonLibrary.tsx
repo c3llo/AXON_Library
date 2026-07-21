@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { VOICES } from "./data/voices.js";
 import IMAGE_STYLE_CATALOG from "./data/imageStyles.json";
 
-type Tab = "programs" | "voice" | "image";
+type Tab = "programs" | "voice" | "image" | "remotion";
 type Voice = (typeof VOICES)[number];
 type CopyState = { id: string; status: "copied" | "error" } | null;
 
@@ -128,6 +128,9 @@ export default function AxonLibrary() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [styleCopyState, setStyleCopyState] = useState<CopyState>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [remotionFrameHeight, setRemotionFrameHeight] = useState(900);
+  const remotionFrameRef = useRef<HTMLIFrameElement | null>(null);
+  const remotionMutationObserverRef = useRef<MutationObserver | null>(null);
 
   const filteredVoices = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -142,7 +145,20 @@ export default function AxonLibrary() {
   }, [category, provider, query]);
 
   useEffect(() => {
-    return () => audioRef.current?.pause();
+    const handleWindowResize = () => window.requestAnimationFrame(() => {
+      const frameDocument = remotionFrameRef.current?.contentDocument;
+      if (!frameDocument) return;
+
+      const nextHeight = Math.max(760, frameDocument.documentElement.scrollHeight, frameDocument.body?.scrollHeight ?? 0);
+      setRemotionFrameHeight((currentHeight) => currentHeight === nextHeight ? currentHeight : nextHeight);
+    });
+    window.addEventListener("resize", handleWindowResize);
+
+    return () => {
+      audioRef.current?.pause();
+      remotionMutationObserverRef.current?.disconnect();
+      window.removeEventListener("resize", handleWindowResize);
+    };
   }, []);
 
   function selectTab(tab: Tab) {
@@ -151,6 +167,26 @@ export default function AxonLibrary() {
       audioRef.current?.pause();
       setPlayingId(null);
     }
+  }
+
+  function syncRemotionFrameHeight() {
+    const frame = remotionFrameRef.current;
+    const frameDocument = frame?.contentDocument;
+    if (!frameDocument) return;
+
+    const nextHeight = Math.max(760, frameDocument.documentElement.scrollHeight, frameDocument.body?.scrollHeight ?? 0);
+    setRemotionFrameHeight((currentHeight) => currentHeight === nextHeight ? currentHeight : nextHeight);
+  }
+
+  function handleRemotionFrameLoad() {
+    const frameDocument = remotionFrameRef.current?.contentDocument;
+    if (!frameDocument?.body) return;
+
+    remotionMutationObserverRef.current?.disconnect();
+    const mutationObserver = new MutationObserver(() => window.requestAnimationFrame(syncRemotionFrameHeight));
+    mutationObserver.observe(frameDocument.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["class"] });
+    remotionMutationObserverRef.current = mutationObserver;
+    syncRemotionFrameHeight();
   }
 
   function toggleVoice(voice: Voice) {
@@ -237,6 +273,16 @@ export default function AxonLibrary() {
           >
             이미지
             <span className="tab-badge">{IMAGE_STYLES.length}</span>
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeTab === "remotion"}
+            className={activeTab === "remotion" ? "active" : ""}
+            onClick={() => selectTab("remotion")}
+          >
+            Remotion
+            <span className="tab-badge">427</span>
           </button>
         </nav>
 
@@ -439,6 +485,32 @@ export default function AxonLibrary() {
                 </article>
               );
             })}
+          </div>
+        </section>
+      )}
+
+      {activeTab === "remotion" && (
+        <section className="remotion-view" role="tabpanel">
+          <div className="remotion-heading">
+            <div>
+              <p className="section-kicker"><span /> AXON REMOTION LAB</p>
+              <h1>&#xC6C0;&#xC9C1;&#xC784;&#xC744; &#xCC3E;&#xACE0;,<br /><em>&#xBC14;&#xB85C; &#xD0D0;&#xC0C9;&#xD558;&#xC138;&#xC694;.</em></h1>
+            </div>
+            <p>
+              21&#xAC1C; &#xCE74;&#xD14C;&#xACE0;&#xB9AC;, 427&#xAC1C; &#xC560;&#xB2C8;&#xBA54;&#xC774;&#xC158;&#xC744; &#xC2E4;&#xC2DC;&#xAC04;&#xC73C;&#xB85C; &#xD655;&#xC778;&#xD558;&#xACE0;<br className="desktop-only" />
+              &#xAC80;&#xC0C9;&#xB7;&#xC7AC;&#xC0DD;&#xB7;&#xC18D;&#xB3C4; &#xC870;&#xC808;&#xB85C; &#xC6D0;&#xD558;&#xB294; &#xC6C0;&#xC9C1;&#xC784;&#xC744; &#xBE60;&#xB974;&#xAC8C; &#xBE44;&#xAD50;&#xD558;&#xC138;&#xC694;.
+            </p>
+          </div>
+
+          <div className="remotion-catalog-frame">
+            <iframe
+              ref={remotionFrameRef}
+              onLoad={handleRemotionFrameLoad}
+              style={{ height: remotionFrameHeight }}
+              src="/remotion-catalog/index.html"
+              title={"AXON Remotion \uC560\uB2C8\uBA54\uC774\uC158 \uCE74\uD0C8\uB85C\uADF8"}
+              loading="lazy"
+            />
           </div>
         </section>
       )}

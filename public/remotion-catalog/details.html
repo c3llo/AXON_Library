@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Remotion 세부 애니메이션</title>
+  <link rel="stylesheet" href="detail.css" />
+</head>
+<body>
+  <main class="shell">
+    <nav class="top-nav">
+      <a class="back-link" href="index.html">← 21개 카테고리</a>
+      <label class="category-jump">카테고리 이동 <select id="categorySelect"></select></label>
+    </nav>
+
+    <header class="category-hero" id="categoryHero">
+      <div>
+        <span class="eyebrow" id="categoryNumber"></span>
+        <h1 id="categoryTitle"></h1>
+        <p id="categoryDescription"></p>
+        <div class="hero-tags" id="heroTags"></div>
+      </div>
+      <div class="hero-count"><strong id="itemCount">0</strong><span>세부 데모</span></div>
+    </header>
+
+    <section class="toolbar" aria-label="세부 데모 제어">
+      <button class="primary" id="playAll">▶ 전체 재생</button>
+      <button id="pauseAll">Ⅱ 전체 정지</button>
+      <button id="replayAll">↻ 전체 다시 보기</button>
+      <select id="speed" aria-label="재생 속도">
+        <option value="0.5">0.5×</option>
+        <option value="1" selected>1×</option>
+        <option value="1.5">1.5×</option>
+        <option value="2">2×</option>
+      </select>
+      <input id="search" type="search" placeholder="이 카테고리에서 세부 항목 검색" />
+      <span class="counter" id="counter"></span>
+    </section>
+
+    <section class="detail-grid" id="detailGrid"></section>
+    <div class="empty" id="empty">검색 결과가 없습니다.</div>
+
+    <nav class="page-nav" aria-label="이전 다음 카테고리">
+      <a id="prevCategory" href="#"></a>
+      <a id="nextCategory" href="#"></a>
+    </nav>
+
+    <footer>
+      각 카드는 브라우저에서 바로 확인할 수 있는 시각적 시뮬레이션입니다. 실제 Remotion에서는 프레임 값을
+      <code>useCurrentFrame()</code>, <code>interpolate()</code>, <code>spring()</code>에 연결해 동일한 원리를 구현합니다.
+    </footer>
+  </main>
+  <script src="catalog-data.js"></script>
+  <script src="detail-app.js"></script>
+</body>
+</html>

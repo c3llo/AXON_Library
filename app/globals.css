@@ -73,7 +73,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .header-status { justify-self: end; color: #667791; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 9px; letter-spacing: .14em; }
 .status-dot { display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: #48d597; box-shadow: 0 0 12px #48d597; }
 
-.programs-view, .voice-view, .image-view { position: relative; z-index: 1; width: min(1240px, 88vw); margin: 0 auto; }
+.programs-view, .voice-view, .image-view, .remotion-view { position: relative; z-index: 1; width: min(1240px, 88vw); margin: 0 auto; }
 .programs-view { padding: 76px 0 36px; }
 .hero, .voice-heading, .image-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 80px; margin-bottom: 52px; }
 .section-kicker { display: flex; align-items: center; gap: 10px; margin: 0 0 17px; color: #6d83a5; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10px; letter-spacing: .2em; font-weight: 700; }
@@ -183,6 +183,14 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .image-library-content button.copied { border-color: rgba(72, 213, 151, .48); background: rgba(38, 151, 105, .15); color: #62d9a5; }
 .image-library-content button.error { border-color: rgba(245, 102, 121, .42); background: rgba(153, 49, 67, .14); color: #ff8fa0; }
 
+.remotion-view { width: min(1480px, 94vw); padding: 64px 0 48px; }
+.remotion-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 80px; margin: 0 auto 38px; width: min(1240px, 93.6%); }
+.remotion-heading h1 { margin: 0; font-size: clamp(40px, 4.3vw, 66px); line-height: .99; letter-spacing: -.055em; font-weight: 760; }
+.remotion-heading h1 em { color: var(--violet); font-style: normal; }
+.remotion-heading > p { margin: 0 0 4px; color: #8795aa; line-height: 1.75; font-size: 14px; }
+.remotion-catalog-frame { overflow: hidden; border: 1px solid rgba(139, 121, 255, .28); border-radius: 8px; background: #080b12; box-shadow: 0 28px 90px rgba(0, 0, 0, .32), 0 0 60px rgba(94, 72, 210, .08); }
+.remotion-catalog-frame iframe { display: block; width: 100%; min-height: 760px; border: 0; background: #080b12; }
+
 footer { position: relative; z-index: 1; width: min(1240px, 88vw); margin: 0 auto; min-height: 82px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--line); color: #39485d; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 8px; letter-spacing: .17em; }
 
 @media (max-width: 980px) {
@@ -190,7 +198,7 @@ footer { position: relative; z-index: 1; width: min(1240px, 88vw); margin: 0 aut
   .main-tabs { order: 3; grid-column: 1 / -1; height: 52px; justify-content: center; }
   .site-header { height: 140px; align-content: center; }
   .header-status { grid-column: 2; grid-row: 1; }
-  .hero, .voice-heading, .image-heading { align-items: flex-start; flex-direction: column; gap: 24px; }
+  .hero, .voice-heading, .image-heading, .remotion-heading { align-items: flex-start; flex-direction: column; gap: 24px; }
   .program-grid { grid-template-columns: 1fr; }
   .program-card { min-height: 0; }
   .voice-toolbar { grid-template-columns: auto 1fr; }
@@ -206,10 +214,11 @@ footer { position: relative; z-index: 1; width: min(1240px, 88vw); margin: 0 aut
   .header-status { display: none; }
   .main-tabs { grid-column: 1 / -1; gap: 16px; }
   .main-tabs button { min-width: 68px; }
-  .programs-view, .voice-view, .image-view, footer { width: calc(100% - 36px); }
-  .programs-view, .voice-view, .image-view { padding-top: 48px; }
-  .hero h1, .voice-heading h1, .image-heading h1 { font-size: 43px; }
-  .hero-copy, .voice-heading > p, .image-heading > p { font-size: 12px; }
+  .programs-view, .voice-view, .image-view, .remotion-view, footer { width: calc(100% - 36px); }
+  .programs-view, .voice-view, .image-view, .remotion-view { padding-top: 48px; }
+  .hero h1, .voice-heading h1, .image-heading h1, .remotion-heading h1 { font-size: 43px; }
+  .hero-copy, .voice-heading > p, .image-heading > p, .remotion-heading > p { font-size: 12px; }
+  .remotion-heading { width: 100%; }
   .desktop-only { display: none; }
   .program-card { padding: 23px; }
   .program-identity { align-items: flex-start; }
