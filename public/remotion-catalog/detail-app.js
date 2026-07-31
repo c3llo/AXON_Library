@@ -26,6 +26,8 @@
       13:['TransitionSeries','presentation','timing'], 14:['perspective','parallax','camera'], 15:['@remotion/three','R3F','ThreeCanvas'],
       16:['particles','noise','random()'], 17:['WebGL','shader','pixel'], 18:['Video','Img','Sequence'],
       19:['@remotion/media-utils','audioData','visualizeAudio()'], 20:['spring()','math','simulation'], 21:['Easing','Sequence','delay'],
+      22:['d3-geo','SVG path','interpolate()'], 23:['React overlay','Sequence','spring()'],
+      24:['@remotion/shapes','rough-notation','SVG'], 25:['@remotion/captions','Sequence','safe area'],
     }[categoryId] || ['useCurrentFrame()','interpolate()'];
     if (demo.includes('svg') || demo.includes('path')) return [...new Set([...base,'SVG path'])].slice(0,4);
     if (demo.includes('three')) return ['@remotion/three','useCurrentFrame()','R3F'];
@@ -40,6 +42,7 @@
       11:'UI 상태를 frame에 매핑',12:'데이터 값을 frame에 매핑',13:'TransitionSeries',14:'카메라·레이어 transform',
       15:'ThreeCanvas frame update',16:'seededRandom + particles',17:'uniform time = frame/fps',18:'Video / Img / Sequence',
       19:'visualizeAudio()',20:'spring / physics formula',21:'Easing + timing composition'
+      ,22:'projection + SVG path',23:'AbsoluteFill + data mapping',24:'@remotion/shapes + SVG',25:'Caption[] + frame timing'
     };
     return map[categoryId] || demo;
   }
@@ -143,6 +146,65 @@
     if (demo.includes('spring') || demo.includes('damped') || demo.includes('overshoot') || demo.includes('friction') || demo.includes('inertia')) return '<div class="physics-track"></div>';
     return '';
   }
+
+  function mapScene(demo) {
+    const points = [[52,101],[103,54],[168,83]];
+    const pins = points.map(([x,y],index)=>`<g class="map-pin anim-piece" style="--i:${index}" transform="translate(${x} ${y})"><circle r="10"/><path d="M0 0 L0 19"/><text x="14" y="4">${["SEOUL","PARIS","NYC"][index]}</text></g>`).join('');
+    const route = '<path class="map-route anim-target" d="M52 101 Q100 23 168 83"/>';
+    const lands = '<path class="map-land anim-secondary" d="M18 42 L50 24 74 31 83 50 68 66 42 62 29 78 14 64 Z"/><path class="map-land anim-secondary" d="M94 24 L126 19 141 39 132 57 149 69 137 103 111 110 102 78 85 64 Z"/><path class="map-land anim-secondary" d="M158 36 L194 28 216 46 208 65 185 70 178 101 153 93 147 68 Z"/>';
+    const rings = '<circle class="map-pulse anim-pop" cx="103" cy="54" r="8"/><circle class="map-range anim-pop" cx="103" cy="54" r="10"/>';
+    const globeClass = demo === 'map-globe-rotation' ? ' is-globe' : '';
+    return `<div class="map-scene anim-root${globeClass}" data-map="${demo}"><svg class="map-svg" viewBox="0 0 230 140">${lands}${route}${rings}${pins}<g class="map-marker"><circle cx="52" cy="101" r="6"/><path d="M-8 0 L8 0 M0 -8 L0 8" transform="translate(52 101)"/></g></svg><div class="map-badge anim-pop"><b>KR</b><span>대한민국 · 01</span></div></div>`;
+  }
+
+  function infoScene(demo) {
+    if (demo.includes('timeline')) {
+      return `<div class="info-timeline anim-root ${demo.includes('horizontal')?'horizontal':''}"><i class="anim-target"></i>${["1998","2012","2026"].map((v,i)=>`<span class="anim-piece" style="--i:${i}"><b>${v}</b><small>KEY EVENT</small></span>`).join('')}</div>`;
+    }
+    if (demo.includes('comparison') || demo.includes('before-after')) {
+      return `<div class="info-compare anim-root"><div class="compare-a">A<strong>42</strong></div><div class="compare-b anim-target">B<strong>87</strong></div><i class="anim-secondary"></i></div>`;
+    }
+    if (['info-ranking','info-process-steps','info-bullet-list','info-checklist','info-table-rows'].includes(demo)) {
+      return `<div class="info-list anim-root">${["ALPHA","BRAVO","CHARLIE","DELTA"].map((v,i)=>`<div class="anim-piece" style="--i:${i}"><b>${demo.includes('check')?'✓':String(i+1).padStart(2,'0')}</b><span>${v}</span><em>${92-i*13}</em></div>`).join('')}</div>`;
+    }
+    if (demo.includes('lower-third') || demo.includes('headline') || demo.includes('ticker') || demo.includes('source-citation')) {
+      return `<div class="broadcast-overlay anim-root ${demo}"><div class="anim-target"><b>${demo.includes('headline')?'BREAKING NEWS':'AXON REPORT'}</b><span>${demo.includes('ticker')?'시장 변화와 핵심 지표를 실시간으로 확인합니다':'REMOTION INFORMATION LAYER'}</span></div></div>`;
+    }
+    if (demo.includes('quote')) return '<blockquote class="info-quote anim-target"><b>“</b>데이터는 이야기를 더 선명하게 만든다.<small>— AXON LAB</small></blockquote>';
+    if (demo.includes('callout')) return '<div class="info-callout anim-root"><div class="anim-target">핵심 지점</div><svg viewBox="0 0 220 130"><path class="anim-secondary" d="M35 105 Q95 15 180 42"/><path class="anim-secondary" d="M168 33 L180 42 166 49"/></svg></div>';
+    if (demo.includes('kpi') || demo.includes('status-progress')) return `<div class="info-kpi anim-root"><span>PERFORMANCE</span><strong class="anim-target">87.4%</strong><i><b class="anim-secondary"></b></i><small>+12.8% THIS MONTH</small></div>`;
+    if (demo.includes('big-keyword')) return '<div class="info-keyword anim-target">IMPACT<span>핵심 변화</span></div>';
+    return `<div class="info-card anim-target"><span>${demo.includes('country')?'🇰🇷  KR':'●  KEY FACT'}</span><strong>${demo.includes('label')?'서울 · 2026':'42.8%'}</strong><small>FRAME-DRIVEN OVERLAY</small></div>`;
+  }
+
+  function shapeScene(demo) {
+    if (demo.startsWith('annotate-')) {
+      const kind = demo.replace('annotate-','');
+      return `<div class="annotation-scene anim-root" data-annotation="${kind}"><strong>IMPORTANT</strong><svg viewBox="0 0 220 120"><path class="anim-target" d="${kind==='underline'?'M35 87 Q110 99 188 86':kind==='strike'?'M28 60 L194 56':kind==='arrow'?'M26 100 Q88 12 177 52 M165 39 L177 52 160 57':kind==='bracket'?'M38 20 L24 20 24 100 38 100 M182 20 L196 20 196 100 182 100':kind==='burst'?'M110 8 L110 29 M180 34 L161 44 M188 98 L165 86 M40 34 L59 44 M32 98 L55 86':kind==='box'?'M28 24 Q111 17 194 27 L188 94 Q108 103 30 91 Z':'M36 62 C40 16 185 10 191 61 C185 107 38 108 36 62 Z'}"/></svg><i class="anim-secondary"></i></div>`;
+    }
+    const shape = demo.replace('shape-','');
+    const paths = {
+      arrow:'M20 72 L154 72 L154 42 L205 75 L154 108 L154 82 L20 82 Z',
+      rect:'M35 25 H185 Q198 25 198 38 V105 Q198 118 185 118 H35 Q22 118 22 105 V38 Q22 25 35 25 Z',
+      callout:'M25 25 H195 V102 H128 L102 126 L95 102 H25 Z',
+      triangle:'M110 16 L205 122 H15 Z',
+      circle:'M110 72 m-54 0 a54 54 0 1 0 108 0 a54 54 0 1 0-108 0',
+      ellipse:'M110 72 m-84 0 a84 44 0 1 0 168 0 a84 44 0 1 0-168 0',
+      heart:'M110 122 C28 79 34 24 73 22 C94 21 106 36 110 48 C114 36 126 21 147 22 C186 24 192 79 110 122 Z',
+      spark:'M110 10 L127 51 L170 34 L152 75 L196 91 L151 99 L159 136 L121 112 L91 137 L91 105 L42 112 L74 78 L35 50 L88 57 Z',
+      star:'M110 10 L132 52 L180 59 L145 92 L154 137 L110 116 L66 137 L75 92 L40 59 L88 52 Z',
+      pie:'M110 72 L110 15 A57 57 0 1 1 58 95 Z',
+      polygon:'M110 12 L177 39 L205 98 L146 132 L76 128 L18 83 L50 31 Z'
+    };
+    return `<svg class="shape-scene anim-root" viewBox="0 0 220 145"><path class="anim-target" d="${paths[shape]||paths.polygon}"/></svg>`;
+  }
+
+  function captionScene(demo) {
+    const words = ["경제의","새로운","변화가","시작됩니다"];
+    const secondLine = demo.includes('bilingual') ? '<small>THE NEW ECONOMY BEGINS NOW</small>' : '';
+    return `<div class="caption-scene anim-root ${demo}" data-caption="${demo}"><div class="safe-guide"></div><span class="speaker anim-secondary">${demo.includes('speaker')?'REPORTER':''}</span><div class="caption-box anim-target">${words.map((word,index)=>`<b class="anim-piece" style="--i:${index}">${demo.includes('emoji')&&index===2?'📈 ':''}${word}</b>`).join(' ')}${secondLine}</div></div>`;
+  }
+
   function sceneHTML(categoryId, item) {
     const d = item.demo;
     if (categoryId === 1) {
@@ -173,6 +235,10 @@
     if (categoryId === 18) return `<div class="media-frame anim-root"><div class="media-image anim-target"></div><div class="media-overlay anim-secondary"></div><div class="media-progress"><i class="anim-progress"></i></div></div>`;
     if (categoryId === 19) return `<div class="audio-stage anim-root">${Array.from({length:24},(_,i)=>`<i class="anim-piece" style="--h:${20+seeded(i,9)*105}px;--i:${i}"></i>`).join('')}<div class="mouth anim-secondary"></div></div>`;
     if (categoryId === 20) return `<div class="physics-stage anim-root" data-physics="${d}">${physicsGuide(d)}<div class="physics-ball anim-target"></div><div class="rope anim-secondary"></div>${Array.from({length:7},(_,i)=>`<span class="physics-ball anim-piece" style="width:15px;height:15px;left:${18+i*9}px;top:${54+i*4}px"></span>`).join('')}</div>`;
+    if (categoryId === 22) return mapScene(d);
+    if (categoryId === 23) return infoScene(d);
+    if (categoryId === 24) return shapeScene(d);
+    if (categoryId === 25) return captionScene(d);
     return `<div class="timing-stage anim-root"><div class="timing-lane" data-label="${item.name.toUpperCase()}"><div class="timing-dot anim-target"></div></div><div class="timing-lane" data-label="REFERENCE"><div class="timing-dot anim-secondary"></div></div><div class="timing-lane" data-label="STEPS"><div class="timing-dot anim-piece"></div></div></div>`;
   }
 
@@ -624,6 +690,92 @@
       else if(d.includes('ramp')||d.includes('fast-slow'))frames=[{transform:'translateX(0)',offset:0},{transform:`translateX(${end*.7}px)`,offset:.22},{transform:`translateX(${end}px)`,offset:1}];
       else if(d.includes('multi-ease'))frames=[{transform:'translateX(0)',offset:0,easing:'ease-in'},{transform:`translateX(${end*.5}px)`,offset:.5,easing:'cubic-bezier(.2,.9,.2,1.3)'},{transform:`translateX(${end}px)`,offset:1}];
       animate(card,target,frames,{duration,easing,direction});animate(card,ref,[{transform:'translateX(0)'},{transform:`translateX(${end}px)`}],{duration,easing:'linear'});animate(card,step,[{transform:'translateX(0)'},{transform:`translateX(${end}px)`}],{duration,easing:'steps(6,end)'});return;
+    }
+
+    if (categoryId === 22) {
+      const route=target,pins=pieces,badge=$('.map-badge',card),pulse=$('.map-pulse',card),range=$('.map-range',card),marker=$('.map-marker',card),scene=$('.map-scene',card);
+      route.style.strokeDasharray='280';route.style.strokeDashoffset='280';
+      secondary.style.transformOrigin='center';
+      let routeFrames=[{strokeDashoffset:280,opacity:.2},{strokeDashoffset:0,opacity:1}];
+      if(d.includes('world-draw')) {
+        $$('.map-land',card).forEach((land,i)=>{land.style.strokeDasharray='180';animate(card,land,[{strokeDashoffset:180,fill:'rgba(124,92,255,0)'},{strokeDashoffset:0,fill:'rgba(124,92,255,.25)'}],{duration:2600,delay:i*150,direction:'normal'});});
+      } else if(d.includes('region-highlight')||d.includes('choropleth')) {
+        $$('.map-land',card).forEach((land,i)=>animate(card,land,[{fill:'rgba(124,92,255,.12)',filter:'brightness(.7)'},{fill:`hsla(${180+i*58},75%,55%,.72)`,filter:'brightness(1.4)'},{fill:'rgba(124,92,255,.12)',filter:'brightness(.7)'}],{duration:2300,delay:i*320}));
+      } else if(d.includes('pin')||d.includes('coordinate')) {
+        pins.forEach((pin,i)=>animate(card,pin,[{opacity:0,transform:`translate(${[52,103,168][i]}px,-35px) scale(.3)`},{opacity:1,transform:`translate(${[52,103,168][i]}px,${[101,54,83][i]}px) scale(1.2)`},{opacity:1,transform:`translate(${[52,103,168][i]}px,${[101,54,83][i]}px) scale(1)`}],{duration:1900,delay:i*300,direction:'normal'}));
+      } else if(d.includes('zoom')) {
+        animate(card,scene,[{transform:'scale(1)'},{transform:'scale(1.72) translate(-28px,16px)'},{transform:'scale(1)'}],{duration:4200});
+      } else if(d==='map-pan') {
+        animate(card,scene,[{transform:'scale(1.28) translateX(35px)'},{transform:'scale(1.28) translateX(-35px)'}],{duration:4200});
+      } else if(d.includes('radar')||d.includes('range')) {
+        pulse.style.opacity='1';range.style.opacity='1';
+        animate(card,pulse,[{r:5,opacity:.9},{r:34,opacity:0}],{duration:1800,direction:'normal'});
+        animate(card,range,[{r:8,opacity:.75},{r:58,opacity:.05}],{duration:2600,direction:'normal'});
+      } else if(d.includes('country-badge')) {
+        badge.style.opacity='1';animate(card,badge,[{opacity:0,transform:'translateY(28px) scale(.7)'},{opacity:1,transform:'translateY(0) scale(1.05)'},{opacity:1,transform:'translateY(0) scale(1)'}],{duration:2100,direction:'normal'});
+      } else if(d.includes('globe')) {
+        animate(card,scene,[{transform:'rotateY(0) rotateZ(-4deg)'},{transform:'rotateY(360deg) rotateZ(4deg)'}],{duration:4600,direction:'normal',easing:'linear'});
+      } else {
+        animate(card,route,routeFrames,{duration:3200,direction:'normal'});
+        animate(card,marker,[{transform:'translate(0,0)',opacity:.25},{transform:'translate(51px,-47px)',opacity:1},{transform:'translate(116px,-18px)',opacity:1}],{duration:3200,direction:'normal'});
+      }
+      if(!d.includes('pin')) pins.forEach((pin,i)=>animate(card,pin,[{opacity:.2,transform:`translate(${[52,103,168][i]}px,${[101,54,83][i]}px) scale(.5)`},{opacity:1,transform:`translate(${[52,103,168][i]}px,${[101,54,83][i]}px) scale(1)`}],{duration:1800,delay:i*180}));
+      return;
+    }
+
+    if (categoryId === 23) {
+      if(d.includes('timeline')) {
+        target.style.transformOrigin=d.includes('horizontal')?'left center':'center top';
+        animate(card,target,[{transform:d.includes('horizontal')?'scaleX(0)':'scaleY(0)'},{transform:d.includes('horizontal')?'scaleX(1)':'scaleY(1)'}],{duration:2400,direction:'normal'});
+        pieces.forEach((piece,i)=>animate(card,piece,[{opacity:0,transform:'scale(.3) translateY(12px)'},{opacity:1,transform:'scale(1) translateY(0)'}],{duration:1600,delay:i*380,direction:'normal'}));return;
+      }
+      if(d.includes('comparison')||d.includes('before-after')) {
+        animate(card,target,[{clipPath:'inset(0 100% 0 0)'},{clipPath:'inset(0)'},{clipPath:'inset(0 0 0 100%)'}],{duration:3600});
+        animate(card,secondary,[{transform:'translateX(-85px)'},{transform:'translateX(85px)'}],{duration:3600});return;
+      }
+      if(pieces.length) {
+        pieces.forEach((piece,i)=>animate(card,piece,[{opacity:0,transform:'translateX(-28px) scale(.92)'},{opacity:1,transform:'translateX(0) scale(1)'}],{duration:1700,delay:i*260,direction:'normal'}));return;
+      }
+      if(d.includes('ticker')) {animate(card,target,[{transform:'translateX(105%)'},{transform:'translateX(-120%)'}],{duration:5200,direction:'normal',easing:'linear'});return;}
+      if(d.includes('lower-third')||d.includes('headline')||d.includes('source')) {animate(card,target,[{transform:'translateX(-110%)',opacity:0},{transform:'translateX(0)',opacity:1},{transform:'translateX(0)',opacity:1},{transform:'translateX(110%)',opacity:0}],{duration:3600,direction:'normal'});return;}
+      if(d.includes('callout')) {
+        secondary.style.strokeDasharray='260';animate(card,secondary,[{strokeDashoffset:260},{strokeDashoffset:0}],{duration:2200,direction:'normal'});
+      }
+      if(d.includes('kpi')||d.includes('status')) {
+        animate(card,target,[{transform:'scale(.72)',opacity:.25},{transform:'scale(1.08)',opacity:1},{transform:'scale(1)',opacity:1}],{duration:2400});
+        animate(card,secondary,[{transform:'scaleX(.05)'},{transform:'scaleX(.87)'}],{duration:2600,direction:'normal'});return;
+      }
+      animate(card,target,[{opacity:0,transform:'translateY(28px) scale(.82)'},{opacity:1,transform:'translateY(0) scale(1.08)'},{opacity:1,transform:'translateY(0) scale(1)'}],{duration:2300,direction:'normal'});return;
+    }
+
+    if (categoryId === 24) {
+      if(d.startsWith('annotate-')) {
+        target.style.strokeDasharray='520';target.style.strokeDashoffset='520';
+        animate(card,target,[{strokeDashoffset:520,opacity:.3},{strokeDashoffset:0,opacity:1}],{duration:2400,direction:'normal'});
+        if(d.includes('highlight')||d.includes('spotlight')) animate(card,secondary,[{transform:'scaleX(0)',opacity:0},{transform:'scaleX(1)',opacity:.75}],{duration:1800,direction:'normal'});
+        return;
+      }
+      target.style.transformOrigin='center';
+      target.style.strokeDasharray='520';
+      animate(card,target,[{strokeDashoffset:520,opacity:.2,transform:'scale(.55) rotate(-22deg)'},{strokeDashoffset:0,opacity:1,transform:'scale(1.08) rotate(8deg)'},{strokeDashoffset:0,opacity:1,transform:'scale(1) rotate(0)'}],{duration:d.includes('heart')?1100:2800});
+      return;
+    }
+
+    if (categoryId === 25) {
+      const box=target,speaker=secondary;
+      speaker.style.opacity=d.includes('speaker')?'1':'0';
+      if(d.includes('safe-area')) {
+        $('.safe-guide',card).style.opacity='1';
+        animate(card,$('.safe-guide',card),[{borderColor:'rgba(35,213,171,.25)'},{borderColor:'rgba(35,213,171,.95)'}],{duration:1600});return;
+      }
+      if(d.includes('slide')) animate(card,box,[{transform:'translateY(90px)',opacity:0},{transform:'translateY(0)',opacity:1}],{duration:1800,direction:'normal'});
+      else if(d.includes('fade')) animate(card,box,[{opacity:0},{opacity:1},{opacity:1},{opacity:0}],{duration:3200,direction:'normal'});
+      else if(d.includes('scale')||d.includes('impact')||d.includes('bounce')) animate(card,box,[{transform:'scale(.25)',opacity:0},{transform:'scale(1.16)',opacity:1},{transform:'scale(.94)',opacity:1},{transform:'scale(1)',opacity:1}],{duration:1800,direction:'normal'});
+      else if(d.includes('typewriter')) pieces.forEach((piece,i)=>animate(card,piece,[{opacity:0},{opacity:0},{opacity:1}],{duration:900,delay:i*360,direction:'normal',easing:'steps(1,end)'}));
+      else if(d.includes('karaoke')||d.includes('active-word')||d.includes('speaker-color')) pieces.forEach((piece,i)=>animate(card,piece,[{color:'#fff',transform:'scale(1)'},{color:i%2?'#23d5ab':'#ffd166',transform:d.includes('active')?'scale(1.2)':'scale(1)'},{color:'rgba(255,255,255,.55)',transform:'scale(1)'}],{duration:1450,delay:i*430,direction:'normal'}));
+      else pieces.forEach((piece,i)=>animate(card,piece,[{opacity:0,transform:'translateY(18px)'},{opacity:1,transform:'translateY(0)'}],{duration:1300,delay:i*220,direction:'normal'}));
+      if(speaker.style.opacity==='1') animate(card,speaker,[{opacity:0,transform:'translateX(-22px)'},{opacity:1,transform:'translateX(0)'}],{duration:1300,direction:'normal'});
+      return;
     }
   }
 

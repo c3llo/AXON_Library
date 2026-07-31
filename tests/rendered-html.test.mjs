@@ -32,7 +32,7 @@ test("server-renders the AXON software library", async () => {
   assert.match(html, /04(?:<!-- -->)? PROGRAMS/);
   assert.match(html, /Voice<span class="tab-badge">91<\/span>/);
   assert.match(html, /이미지<span class="tab-badge">8<\/span>/);
-  assert.match(html, /Remotion<span class="tab-badge">427<\/span>/);
+  assert.match(html, /Remotion<span class="tab-badge">503<\/span>/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/);
 });
 
@@ -64,9 +64,17 @@ test("ships the complete Remotion animation catalog", async () => {
 
   const catalog = context.window.REMOTION_CATALOG;
   assert.ok(Array.isArray(catalog));
-  assert.equal(catalog.length, 21);
+  assert.equal(catalog.length, 25);
   const totalItems = catalog.reduce((sum, category) => sum + category.items.length, 0);
-  assert.equal(totalItems, 427);
+  assert.equal(totalItems, 503);
+  assert.equal(
+    catalog.slice(-4).map((category) => category.slug).join(","),
+    "maps-geospatial,infographic-overlays,shapes-annotations,captions-subtitles",
+  );
+  const demos = new Set(catalog.flatMap((category) => category.items.map((item) => item.demo)));
+  for (const requiredDemo of ["map-pin-drop", "info-label-badge", "shape-arrow", "caption-karaoke"]) {
+    assert.ok(demos.has(requiredDemo), `missing ${requiredDemo}`);
+  }
 
   for (const file of ["index.html", "details.html", "detail.css", "detail-app.js"]) {
     await access(new URL(`../public/remotion-catalog/${file}`, import.meta.url));

@@ -11,19 +11,19 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     metadataBase: new URL(origin),
     title: "AXON Software Library",
-    description: "AXON 프로그램, Voice, 추천 이미지 스타일 라이브러리를 한곳에서 확인하세요.",
+    description: "AXON 프로그램, Voice, 추천 이미지 스타일과 Remotion 애니메이션 라이브러리를 한곳에서 확인하세요.",
     icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
     openGraph: {
       title: "AXON Software Library",
-      description: "프로그램 다운로드부터 Voice 샘플과 추천 이미지 스타일까지, AXON의 모든 도구를 한곳에서.",
-      images: [{ url: `${origin}/og.png`, width: 1200, height: 630, alt: "AXON Software Library" }],
+      description: "프로그램, Voice, 이미지 스타일과 503개 Remotion 애니메이션 데모를 한곳에서.",
+      images: [{ url: `${origin}/og-remotion.png`, width: 1200, height: 630, alt: "AXON Software Library Remotion catalog" }],
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
       title: "AXON Software Library",
-      description: "프로그램 다운로드부터 Voice 샘플과 추천 이미지 스타일까지, AXON의 모든 도구를 한곳에서.",
-      images: [`${origin}/og.png`],
+      description: "프로그램, Voice, 이미지 스타일과 503개 Remotion 애니메이션 데모를 한곳에서.",
+      images: [`${origin}/og-remotion.png`],
     },
   };
 }

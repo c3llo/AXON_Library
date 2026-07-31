@@ -2472,3 +2472,122 @@ window.REMOTION_CATALOG = [
     ]
   }
 ];
+
+window.REMOTION_CATALOG.push(
+  {
+    id: 22,
+    slug: "maps-geospatial",
+    title: "지도·지리 시각화",
+    english: "Maps & Geospatial Visualization",
+    description: "AXON Studio의 지도 패널처럼 세계 지도, 위치 핀, 이동 경로, 국가 강조와 지리 데이터를 프레임에 맞춰 표현합니다.",
+    keywords: ["map", "d3-geo", "route", "pin", "globe", "country"],
+    items: [
+      { name: "세계 지도 드로잉", demo: "map-world-draw", description: "세계 지도 윤곽을 선으로 그리며 장면에 등장시킵니다." },
+      { name: "국가·지역 하이라이트", demo: "map-region-highlight", description: "선택한 국가나 지역의 색과 밝기를 순차적으로 강조합니다." },
+      { name: "단계구분도·Choropleth", demo: "map-choropleth", description: "데이터 값에 따라 지역별 채도와 색상을 변화시킵니다." },
+      { name: "위치 핀 드롭", demo: "map-pin-drop", description: "지정 좌표에 핀이 낙하하고 바운스하며 고정됩니다." },
+      { name: "여러 위치 순차 표시", demo: "map-multi-pin", description: "복수 좌표의 핀과 라벨을 시간차를 두고 표시합니다." },
+      { name: "지도 경로 선 그리기", demo: "map-route-draw", description: "출발지부터 목적지까지 이동 경로를 점선으로 그립니다." },
+      { name: "경로 위 마커 이동", demo: "map-route-marker", description: "완성되는 경로를 따라 차량·항공기 마커를 이동시킵니다." },
+      { name: "대권항로 아크", demo: "map-great-circle", description: "지구 곡률을 연상시키는 곡선 항로를 두 지점 사이에 그립니다." },
+      { name: "지역 줌 인·아웃", demo: "map-region-zoom", description: "전체 지도에서 특정 지역으로 부드럽게 확대하고 복귀합니다." },
+      { name: "지도 패닝", demo: "map-pan", description: "넓은 지도를 가로 또는 세로로 이동하며 지역을 탐색합니다." },
+      { name: "비행 경로 애니메이션", demo: "map-flight-path", description: "항공기 아이콘과 궤적을 함께 움직여 장거리 이동을 보여줍니다." },
+      { name: "무역 흐름 화살표", demo: "map-trade-flow", description: "국가 사이의 교역 방향과 규모를 화살표로 나타냅니다." },
+      { name: "이주·확산 흐름", demo: "map-migration-flow", description: "여러 출발지에서 목적지로 모이는 흐름을 순차적으로 시각화합니다." },
+      { name: "위치 레이더 펄스", demo: "map-radar-pulse", description: "중요 지점을 중심으로 반복 확산하는 원형 펄스를 표시합니다." },
+      { name: "거리·범위 원", demo: "map-range-circle", description: "기준점에서 거리나 영향 범위를 나타내는 원을 확장합니다." },
+      { name: "좌표·지명 라벨", demo: "map-coordinate-label", description: "핀과 연결된 좌표·지명 라벨을 팝인합니다." },
+      { name: "국가 국기 배지", demo: "map-country-badge", description: "AXON Studio처럼 국기, 국가명, 순위를 하나의 정보 배지로 표시합니다." },
+      { name: "회전하는 3D 지구본", demo: "map-globe-rotation", description: "구형 지구본과 경위선을 회전시켜 글로벌 범위를 표현합니다." }
+    ]
+  },
+  {
+    id: 23,
+    slug: "infographic-overlays",
+    title: "인포그래픽·정보 오버레이",
+    english: "Infographics & Information Overlays",
+    description: "수치, 비교, 연표, 배지와 방송형 정보 패널을 영상 위에 겹쳐 핵심 사실을 빠르게 전달합니다.",
+    keywords: ["infographic", "overlay", "badge", "timeline", "lower-third", "ticker"],
+    items: [
+      { name: "지명·날짜·수치 배지", demo: "info-label-badge", description: "AXON Studio의 LabelBadges처럼 핵심 지명·날짜·수치를 순차 팝인합니다." },
+      { name: "KPI 수치 카드", demo: "info-kpi-card", description: "대표 숫자와 단위를 카운트업하며 작은 설명을 함께 표시합니다." },
+      { name: "2열 비교 카드", demo: "info-comparison", description: "두 대상의 수치와 특징을 좌우 카드로 비교합니다." },
+      { name: "전후 비교 슬라이더", demo: "info-before-after", description: "Before와 After 화면의 경계를 움직여 차이를 보여줍니다." },
+      { name: "순위 보드", demo: "info-ranking", description: "순위 항목이 재정렬되고 값이 갱신되는 과정을 표현합니다." },
+      { name: "세로 연표", demo: "info-timeline-vertical", description: "AXON Studio처럼 축선을 그리고 시점과 사건을 차례로 나타냅니다." },
+      { name: "가로 연표", demo: "info-timeline-horizontal", description: "시간축을 따라 주요 이정표를 왼쪽에서 오른쪽으로 공개합니다." },
+      { name: "프로세스 단계", demo: "info-process-steps", description: "여러 단계의 진행 상태를 연결선과 번호로 보여줍니다." },
+      { name: "불릿 목록", demo: "info-bullet-list", description: "핵심 요점을 한 줄씩 순차적으로 등장시킵니다." },
+      { name: "체크리스트", demo: "info-checklist", description: "항목이 등장한 뒤 체크 표시가 그려지도록 구성합니다." },
+      { name: "인용문 카드", demo: "info-quote-card", description: "인용문과 출처를 타이포그래피 카드로 강조합니다." },
+      { name: "출처·각주 표시", demo: "info-source-citation", description: "자료 출처와 각주를 화면 가장자리에 안전하게 표시합니다." },
+      { name: "로어 서드", demo: "info-lower-third", description: "이름, 역할, 장소 정보를 방송형 하단 자막으로 슬라이드 인합니다." },
+      { name: "헤드라인 배너", demo: "info-headline-banner", description: "중요 속보나 장면 제목을 넓은 배너로 강조합니다." },
+      { name: "뉴스 티커", demo: "info-news-ticker", description: "하단 띠 안에서 여러 정보를 연속으로 흘려보냅니다." },
+      { name: "팩트 박스", demo: "info-fact-box", description: "핵심 사실 한 문장을 작은 정보 카드로 띄웁니다." },
+      { name: "콜아웃 화살표", demo: "info-callout-arrow", description: "화면 속 대상과 설명 상자를 화살표로 연결합니다." },
+      { name: "상태·진행 패널", demo: "info-status-progress", description: "단계, 진행률, 완료 상태를 하나의 패널에서 갱신합니다." },
+      { name: "표·행 순차 등장", demo: "info-table-rows", description: "표의 헤더와 행을 위에서 아래로 순서대로 나타냅니다." },
+      { name: "대형 핵심어 타이포", demo: "info-big-keyword", description: "AXON Studio의 BigKineticText처럼 핵심 단어를 중앙에 크게 충돌시킵니다." }
+    ]
+  },
+  {
+    id: 24,
+    slug: "shapes-annotations",
+    title: "도형·아이콘·주석",
+    english: "Shapes, Icons & Annotations",
+    description: "Remotion 공식 Shapes와 Rough Notation 계열 도구를 활용해 도형, 아이콘, 손그림 강조 표시를 프레임 단위로 제어합니다.",
+    keywords: ["@remotion/shapes", "rough-notation", "arrow", "callout", "annotation"],
+    items: [
+      { name: "Arrow 화살표", demo: "shape-arrow", description: "방향과 길이가 변하는 SVG 화살표를 그립니다." },
+      { name: "Rect 사각형", demo: "shape-rect", description: "크기와 모서리 반경을 조절하는 사각형을 생성합니다." },
+      { name: "Callout 말풍선", demo: "shape-callout", description: "꼬리 위치를 가진 콜아웃 도형을 팝업합니다." },
+      { name: "Triangle 삼각형", demo: "shape-triangle", description: "세 꼭짓점으로 구성된 삼각형을 회전하며 등장시킵니다." },
+      { name: "Circle 원", demo: "shape-circle", description: "원형 도형의 반지름과 테두리를 애니메이션화합니다." },
+      { name: "Ellipse 타원", demo: "shape-ellipse", description: "가로·세로 반지름이 다른 타원을 변형합니다." },
+      { name: "Heart 하트", demo: "shape-heart", description: "하트 SVG를 박동하듯 확대·축소합니다." },
+      { name: "Spark 스파크", demo: "shape-spark", description: "반짝임 도형을 회전하고 순간적으로 발광시킵니다." },
+      { name: "Star 별", demo: "shape-star", description: "별 도형의 꼭짓점과 회전을 강조합니다." },
+      { name: "Pie 파이 조각", demo: "shape-pie", description: "원형 조각의 시작·끝 각도를 움직여 비율을 보여줍니다." },
+      { name: "Polygon 다각형", demo: "shape-polygon", description: "다각형의 꼭짓점과 회전값을 프레임에 따라 변화시킵니다." },
+      { name: "손그림 원 강조", demo: "annotate-circle", description: "단어나 대상 주위를 거친 원으로 빠르게 둘러쌉니다." },
+      { name: "손그림 밑줄", demo: "annotate-underline", description: "중요 문장 아래에 손으로 그린 듯한 밑줄을 긋습니다." },
+      { name: "형광펜 하이라이트", demo: "annotate-highlight", description: "텍스트 뒤를 형광펜 색 띠로 쓸어 강조합니다." },
+      { name: "취소선", demo: "annotate-strike", description: "잘못된 값이나 이전 내용을 선으로 지웁니다." },
+      { name: "손그림 박스", demo: "annotate-box", description: "중요 영역 바깥을 거친 사각형으로 감쌉니다." },
+      { name: "곡선 화살표 주석", demo: "annotate-arrow", description: "설명에서 대상까지 이어지는 곡선 화살표를 그립니다." },
+      { name: "버스트 라인", demo: "annotate-burst", description: "대상 주변에서 짧은 강조선이 방사형으로 터집니다." },
+      { name: "괄호·브래킷", demo: "annotate-bracket", description: "여러 항목을 하나로 묶는 괄호를 선으로 그립니다." },
+      { name: "스포트라이트 강조", demo: "annotate-spotlight", description: "주변을 어둡게 하고 선택 영역만 밝게 드러냅니다." }
+    ]
+  },
+  {
+    id: 25,
+    slug: "captions-subtitles",
+    title: "자막·캡션 시스템",
+    english: "Captions & Subtitle Systems",
+    description: "Remotion Captions 데이터와 프레임 타이밍을 사용해 방송 자막, 단어 강조, 다국어와 화자 정보를 정확히 동기화합니다.",
+    keywords: ["@remotion/captions", "subtitle", "karaoke", "speaker", "safe-area"],
+    items: [
+      { name: "기본 하단 자막", demo: "caption-bottom", description: "화면 하단 안전 영역에 한두 줄 자막을 표시합니다." },
+      { name: "중앙 임팩트 자막", demo: "caption-impact", description: "중요 문장을 중앙에 크게 확대하며 등장시킵니다." },
+      { name: "단어별 가라오케 강조", demo: "caption-karaoke", description: "발화 시간에 맞춰 현재 단어의 색상을 순서대로 바꿉니다." },
+      { name: "현재 단어 확대", demo: "caption-active-word", description: "말하고 있는 단어만 크기와 굵기를 키워 강조합니다." },
+      { name: "화자별 색상 자막", demo: "caption-speaker-color", description: "화자마다 다른 색과 라벨을 사용해 대화를 구분합니다." },
+      { name: "화자 이름표", demo: "caption-speaker-label", description: "자막 위에 작은 화자 이름표를 함께 표시합니다." },
+      { name: "2개 언어 자막", demo: "caption-bilingual", description: "원문과 번역문을 위아래 두 줄로 동시에 구성합니다." },
+      { name: "SRT 페이지 분할", demo: "caption-page", description: "긴 캡션을 읽기 좋은 단어 수와 시간 구간으로 나눕니다." },
+      { name: "자동 줄바꿈", demo: "caption-wrap", description: "화면 폭에 맞춰 문장을 균형 있게 두 줄로 배치합니다." },
+      { name: "배경 박스 자막", demo: "caption-box", description: "가독성을 위해 자막 뒤에 반투명 배경 상자를 표시합니다." },
+      { name: "둥근 텍스트 박스", demo: "caption-rounded-box", description: "문장 길이에 맞춰 둥근 배경 상자가 확장됩니다." },
+      { name: "팝·바운스 자막", demo: "caption-bounce", description: "각 단어나 자막 묶음이 바운스하며 등장합니다." },
+      { name: "타자기 자막", demo: "caption-typewriter", description: "발화 구간 안에서 글자가 차례로 입력됩니다." },
+      { name: "슬라이드 인 자막", demo: "caption-slide", description: "자막이 화면 밖에서 하단 안전 영역으로 미끄러져 들어옵니다." },
+      { name: "페이드 자막", demo: "caption-fade", description: "자막의 시작과 끝에서 투명도를 부드럽게 변화시킵니다." },
+      { name: "스케일 자막", demo: "caption-scale", description: "자막이 작은 크기에서 원래 크기로 확대되며 나타납니다." },
+      { name: "이모지·아이콘 삽입", demo: "caption-emoji", description: "문맥에 맞는 이모지나 아이콘을 자막 안에 함께 애니메이션화합니다." },
+      { name: "자막 안전 영역 가이드", demo: "caption-safe-area", description: "가로·세로 영상의 잘림을 피하도록 캡션 배치 영역을 안내합니다." }
+    ]
+  }
+);

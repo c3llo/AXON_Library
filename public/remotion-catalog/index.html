@@ -312,6 +312,12 @@
     .timing{width:220px;display:grid;gap:12px}.lane{position:relative;height:26px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden}.lane::before{content:attr(data-label);position:absolute;z-index:3;left:8px;top:5px;color:rgba(255,255,255,.58);font:800 9px/1 ui-monospace,monospace}.dot{position:absolute;top:5px;left:5px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 0 18px rgba(255,255,255,.6);animation-duration:2.8s;animation-iteration-count:infinite;animation-direction:alternate}.linear{animation-name:timingMove;animation-timing-function:linear}.ease{animation-name:timingMove;animation-timing-function:cubic-bezier(.16,.84,.44,1)}.steps{animation-name:timingMove;animation-timing-function:steps(6)}.bounce{animation-name:timingBounce;animation-timing-function:cubic-bezier(.2,.9,.25,1.35)}
     @keyframes timingMove{to{transform:translateX(189px)}}@keyframes timingBounce{0%{transform:translateX(0)}70%{transform:translateX(201px)}85%{transform:translateX(177px)}100%{transform:translateX(189px)}}
 
+    /* 22-25 maps, infographics, shapes, captions */
+    .map-preview{position:relative;width:220px;height:140px}.map-preview svg{width:100%;height:100%}.map-preview .land{fill:rgba(124,92,255,.18);stroke:rgba(175,194,235,.6);stroke-width:2}.map-preview .route{fill:none;stroke:#ffd166;stroke-width:4;stroke-linecap:round;stroke-dasharray:220;animation:mapRoute 3s ease-in-out infinite}.map-preview .pin{fill:#ff668f;stroke:#fff;stroke-width:2;transform-origin:center;animation:pinDrop 3s ease-in-out infinite}@keyframes mapRoute{0%{stroke-dashoffset:220}65%,100%{stroke-dashoffset:0}}@keyframes pinDrop{0%,25%{transform:translateY(-55px) scale(.3);opacity:0}48%{transform:translateY(5px) scale(1.2);opacity:1}62%,100%{transform:translateY(0) scale(1);opacity:1}}
+    .info-preview{display:grid;width:220px;gap:8px}.info-preview div{display:grid;grid-template-columns:34px 1fr 35px;align-items:center;padding:8px 10px;border:1px solid rgba(255,255,255,.1);border-radius:5px;background:rgba(255,255,255,.05);opacity:0;animation:infoRow 2.8s ease-out infinite}.info-preview div:nth-child(2){animation-delay:.2s}.info-preview div:nth-child(3){animation-delay:.4s}.info-preview b{color:#23d5ab;font:900 10px/1 ui-monospace,monospace}.info-preview span{font-size:11px;font-weight:850}.info-preview em{color:#ffd166;font:900 11px/1 ui-monospace,monospace}@keyframes infoRow{0%,12%{opacity:0;transform:translateX(-30px)}45%,100%{opacity:1;transform:translateX(0)}}
+    .shape-preview{position:relative;width:210px;height:140px}.shape-preview svg{position:absolute;inset:0;width:100%;height:100%}.shape-preview path{fill:rgba(124,92,255,.18);stroke:#8f7aff;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:520;animation:shapeDraw 3s ease-in-out infinite}.shape-preview strong{position:absolute;inset:0;display:grid;place-items:center;font-size:21px}.shape-preview .scribble{fill:none;stroke:#ffd166;stroke-width:6;animation-delay:.5s}@keyframes shapeDraw{0%{stroke-dashoffset:520;transform:scale(.65)}60%,100%{stroke-dashoffset:0;transform:scale(1)}}
+    .caption-preview{position:relative;display:grid;width:220px;height:140px;place-items:end center;overflow:hidden;border-radius:6px;background:linear-gradient(145deg,#1a3353,#0b1526)}.caption-preview:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 72% 26%,rgba(255,209,102,.25),transparent 28%)}.caption-preview p{position:relative;z-index:2;margin:0 0 15px;padding:9px 12px;border-radius:5px;background:rgba(0,0,0,.72);font-size:13px;font-weight:900}.caption-preview span{display:inline-block;animation:captionWord 2.4s ease-in-out infinite}.caption-preview span:nth-child(2){animation-delay:.35s}.caption-preview span:nth-child(3){animation-delay:.7s}@keyframes captionWord{0%,20%{color:#fff;transform:scale(1)}48%{color:#ffd166;transform:scale(1.2)}72%,100%{color:rgba(255,255,255,.55);transform:scale(1)}}
+
     .empty { display:none; padding:70px 20px; text-align:center; color:var(--muted); }
     .empty.show { display:block; }
     footer { margin-top: 28px; padding: 24px; text-align:center; color:#7e879d; font-size:12px; }
@@ -328,9 +334,9 @@
 <body class="motion-on">
   <main class="shell">
     <section class="hero">
-      <span class="eyebrow">21 categories · 427 detailed actions</span>
+      <span class="eyebrow">25 categories · 503 detailed actions</span>
       <h1>Remotion이 표현할 수 있는 애니메이션을 한 화면에서 확인하세요.</h1>
-      <p>각 카드는 <strong>21가지 애니메이션 카테고리</strong>를 대표합니다. 카드를 통해 총 <strong>427개 세부 항목</strong>의 개별 데모 페이지로 이동하고, 각 효과를 검색·재생·비교할 수 있습니다.</p>
+      <p>각 카드는 <strong>25가지 애니메이션 카테고리</strong>를 대표합니다. 카드를 통해 총 <strong>503개 세부 항목</strong>의 개별 데모 페이지로 이동하고, 각 효과를 검색·재생·비교할 수 있습니다.</p>
     </section>
 
     <section class="toolbar" aria-label="애니메이션 제어 도구">
@@ -344,7 +350,7 @@
         <option value="2">2×</option>
       </select>
       <input id="search" type="search" placeholder="예: 텍스트, SVG, 파티클, 전환..." />
-      <span class="counter" id="counter">21 / 21개 표시</span>
+      <span class="counter" id="counter">25 / 25개 표시</span>
     </section>
 
     <section class="grid" id="grid">
@@ -493,6 +499,34 @@
         <div class="preview"><div class="timing"><div class="lane" data-label="LINEAR"><div class="dot linear"></div></div><div class="lane" data-label="EASE OUT"><div class="dot ease"></div></div><div class="lane" data-label="STEPS"><div class="dot steps"></div></div><div class="lane" data-label="OVERSHOOT"><div class="dot bounce"></div></div></div></div>
         <div class="content"><p>같은 속성도 linear, ease, spring, steps, stagger, loop와 속도 램핑에 따라 전혀 다르게 보입니다.</p><div class="tags"><span class="tag">Easing</span><span class="tag">spring</span><span class="tag">Sequence</span><span class="tag">stagger</span></div></div>
         <footer class="card-foot"><span>대표 데모: 이징 비교</span><button class="replay">↻ 다시 보기</button></footer>
+      </article>
+
+      <article class="card" data-search="지도 지리 국가 위치 핀 경로 route map geospatial globe country">
+        <header class="card-head"><span class="num">22</span><div><h2>지도·지리 시각화</h2><div class="card-sub">Maps & Geospatial Visualization</div></div></header>
+        <div class="preview"><div class="map-preview"><svg viewBox="0 0 220 140" aria-label="지도 경로와 위치 핀 애니메이션"><path class="land" d="M13 45 L49 22 78 36 70 67 42 62 24 85 Z M91 27 L132 20 145 52 128 64 142 103 108 111 96 74 80 58 Z M157 38 L199 29 213 57 186 72 178 104 148 91 Z"/><path class="route" d="M46 99 Q104 19 177 79"/><circle class="pin" cx="177" cy="79" r="10"/></svg></div></div>
+        <div class="content"><p>세계 지도, 국가 강조, 위치 핀, 이동 경로, 무역 흐름과 지구본을 프레임에 맞춰 표현합니다.</p><div class="tags"><span class="tag">d3-geo</span><span class="tag">SVG map</span><span class="tag">route</span><span class="tag">country badge</span></div></div>
+        <footer class="card-foot"><span>대표 데모: 지도 경로 + 핀</span><button class="replay">↻ 다시 보기</button></footer>
+      </article>
+
+      <article class="card" data-search="인포그래픽 정보 오버레이 배지 연표 로어 서드 티커 infographic overlay badge timeline lower third">
+        <header class="card-head"><span class="num">23</span><div><h2>인포그래픽·정보 오버레이</h2><div class="card-sub">Infographics & Information Overlays</div></div></header>
+        <div class="preview"><div class="info-preview"><div><b>01</b><span>MARKET</span><em>92</em></div><div><b>02</b><span>GROWTH</span><em>79</em></div><div><b>03</b><span>VALUE</span><em>66</em></div></div></div>
+        <div class="content"><p>수치 배지, 비교, 연표, 목록, 로어 서드와 뉴스 티커로 핵심 정보를 영상 위에 구조화합니다.</p><div class="tags"><span class="tag">overlay</span><span class="tag">timeline</span><span class="tag">lower-third</span><span class="tag">ticker</span></div></div>
+        <footer class="card-foot"><span>대표 데모: 순위 정보 패널</span><button class="replay">↻ 다시 보기</button></footer>
+      </article>
+
+      <article class="card" data-search="도형 아이콘 주석 화살표 callout rough notation shape arrow annotation highlight">
+        <header class="card-head"><span class="num">24</span><div><h2>도형·아이콘·주석</h2><div class="card-sub">Shapes, Icons & Annotations</div></div></header>
+        <div class="preview"><div class="shape-preview"><strong>IMPORTANT</strong><svg viewBox="0 0 210 140" aria-label="도형과 손그림 주석 애니메이션"><path d="M30 70 C34 24 176 17 184 68 C177 116 35 116 30 70 Z"/><path class="scribble" d="M36 103 Q108 116 179 101"/></svg></div></div>
+        <div class="content"><p>Remotion Shapes 도형과 손그림 원·밑줄·화살표·하이라이트를 개별 애니메이션으로 제공합니다.</p><div class="tags"><span class="tag">@remotion/shapes</span><span class="tag">rough-notation</span><span class="tag">SVG</span></div></div>
+        <footer class="card-foot"><span>대표 데모: 손그림 강조</span><button class="replay">↻ 다시 보기</button></footer>
+      </article>
+
+      <article class="card" data-search="자막 캡션 subtitle caption karaoke speaker bilingual srt safe area">
+        <header class="card-head"><span class="num">25</span><div><h2>자막·캡션 시스템</h2><div class="card-sub">Captions & Subtitle Systems</div></div></header>
+        <div class="preview"><div class="caption-preview"><p><span>경제의</span> <span>새로운</span> <span>변화</span></p></div></div>
+        <div class="content"><p>기본·임팩트·가라오케·화자별·다국어 자막을 캡션 데이터와 프레임 타이밍에 동기화합니다.</p><div class="tags"><span class="tag">@remotion/captions</span><span class="tag">karaoke</span><span class="tag">speaker</span><span class="tag">safe-area</span></div></div>
+        <footer class="card-foot"><span>대표 데모: 단어별 강조 자막</span><button class="replay">↻ 다시 보기</button></footer>
       </article>
     </section>
     <div class="empty" id="empty">검색 결과가 없습니다.</div>

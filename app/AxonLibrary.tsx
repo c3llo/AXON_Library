@@ -282,7 +282,7 @@ export default function AxonLibrary() {
             onClick={() => selectTab("remotion")}
           >
             Remotion
-            <span className="tab-badge">427</span>
+            <span className="tab-badge">503</span>
           </button>
         </nav>
 
@@ -497,7 +497,7 @@ export default function AxonLibrary() {
               <h1>&#xC6C0;&#xC9C1;&#xC784;&#xC744; &#xCC3E;&#xACE0;,<br /><em>&#xBC14;&#xB85C; &#xD0D0;&#xC0C9;&#xD558;&#xC138;&#xC694;.</em></h1>
             </div>
             <p>
-              21&#xAC1C; &#xCE74;&#xD14C;&#xACE0;&#xB9AC;, 427&#xAC1C; &#xC560;&#xB2C8;&#xBA54;&#xC774;&#xC158;&#xC744; &#xC2E4;&#xC2DC;&#xAC04;&#xC73C;&#xB85C; &#xD655;&#xC778;&#xD558;&#xACE0;<br className="desktop-only" />
+              25&#xAC1C; &#xCE74;&#xD14C;&#xACE0;&#xB9AC;, 503&#xAC1C; &#xC560;&#xB2C8;&#xBA54;&#xC774;&#xC158;&#xC744; &#xC2E4;&#xC2DC;&#xAC04;&#xC73C;&#xB85C; &#xD655;&#xC778;&#xD558;&#xACE0;<br className="desktop-only" />
               &#xAC80;&#xC0C9;&#xB7;&#xC7AC;&#xC0DD;&#xB7;&#xC18D;&#xB3C4; &#xC870;&#xC808;&#xB85C; &#xC6D0;&#xD558;&#xB294; &#xC6C0;&#xC9C1;&#xC784;&#xC744; &#xBE60;&#xB974;&#xAC8C; &#xBE44;&#xAD50;&#xD558;&#xC138;&#xC694;.
             </p>
           </div>
