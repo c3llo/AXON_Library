@@ -199,10 +199,27 @@
     return `<svg class="shape-scene anim-root" viewBox="0 0 220 145"><path class="anim-target" d="${paths[shape]||paths.polygon}"/></svg>`;
   }
 
+  const TYPEWRITER_DURATION_MS = 4800;
+
+  function typewriterFrames(index, total) {
+    const revealStart = .06 + (index / Math.max(1, total)) * .58;
+    const revealEnd = Math.min(.68, revealStart + .015);
+    return [
+      {opacity:0,offset:0},
+      {opacity:0,offset:revealStart},
+      {opacity:1,offset:revealEnd},
+      {opacity:1,offset:.92},
+      {opacity:0,offset:1},
+    ];
+  }
+
   function captionScene(demo) {
     const words = ["경제의","새로운","변화가","시작됩니다"];
     const secondLine = demo.includes('bilingual') ? '<small>THE NEW ECONOMY BEGINS NOW</small>' : '';
-    return `<div class="caption-scene anim-root ${demo}" data-caption="${demo}"><div class="safe-guide"></div><span class="speaker anim-secondary">${demo.includes('speaker')?'REPORTER':''}</span><div class="caption-box anim-target">${words.map((word,index)=>`<b class="anim-piece" style="--i:${index}">${demo.includes('emoji')&&index===2?'📈 ':''}${word}</b>`).join(' ')}${secondLine}</div></div>`;
+    const caption = demo.includes('typewriter')
+      ? [...words.join(' ')].map((character,index)=>`<b class="anim-piece" style="--i:${index}">${character === ' ' ? '&nbsp;' : character}</b>`).join('')
+      : words.map((word,index)=>`<b class="anim-piece" style="--i:${index}">${demo.includes('emoji')&&index===2?'📈 ':''}${word}</b>`).join(' ');
+    return `<div class="caption-scene anim-root ${demo}" data-caption="${demo}"><div class="safe-guide"></div><span class="speaker anim-secondary">${demo.includes('speaker')?'REPORTER':''}</span><div class="caption-box anim-target">${caption}${secondLine}</div></div>`;
   }
 
   function sceneHTML(categoryId, item) {
@@ -771,7 +788,7 @@
       if(d.includes('slide')) animate(card,box,[{transform:'translateY(90px)',opacity:0},{transform:'translateY(0)',opacity:1}],{duration:1800,direction:'normal'});
       else if(d.includes('fade')) animate(card,box,[{opacity:0},{opacity:1},{opacity:1},{opacity:0}],{duration:3200,direction:'normal'});
       else if(d.includes('scale')||d.includes('impact')||d.includes('bounce')) animate(card,box,[{transform:'scale(.25)',opacity:0},{transform:'scale(1.16)',opacity:1},{transform:'scale(.94)',opacity:1},{transform:'scale(1)',opacity:1}],{duration:1800,direction:'normal'});
-      else if(d.includes('typewriter')) pieces.forEach((piece,i)=>animate(card,piece,[{opacity:0},{opacity:0},{opacity:1}],{duration:900,delay:i*360,direction:'normal',easing:'steps(1,end)'}));
+      else if(d.includes('typewriter')) pieces.forEach((piece,i)=>animate(card,piece,typewriterFrames(i,pieces.length),{duration:TYPEWRITER_DURATION_MS,direction:'normal',easing:'steps(1,end)'}));
       else if(d.includes('karaoke')||d.includes('active-word')||d.includes('speaker-color')) pieces.forEach((piece,i)=>animate(card,piece,[{color:'#fff',transform:'scale(1)'},{color:i%2?'#23d5ab':'#ffd166',transform:d.includes('active')?'scale(1.2)':'scale(1)'},{color:'rgba(255,255,255,.55)',transform:'scale(1)'}],{duration:1450,delay:i*430,direction:'normal'}));
       else pieces.forEach((piece,i)=>animate(card,piece,[{opacity:0,transform:'translateY(18px)'},{opacity:1,transform:'translateY(0)'}],{duration:1300,delay:i*220,direction:'normal'}));
       if(speaker.style.opacity==='1') animate(card,speaker,[{opacity:0,transform:'translateX(-22px)'},{opacity:1,transform:'translateX(0)'}],{duration:1300,direction:'normal'});

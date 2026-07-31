@@ -80,3 +80,14 @@ test("ships the complete Remotion animation catalog", async () => {
     await access(new URL(`../public/remotion-catalog/${file}`, import.meta.url));
   }
 });
+
+test("typewriter captions accumulate characters and keep the completed line visible", async () => {
+  const source = await readFile(
+    new URL("../public/remotion-catalog/detail-app.js", import.meta.url),
+    "utf8",
+  );
+
+  assert.match(source, /const TYPEWRITER_DURATION_MS = 4800;/);
+  assert.match(source, /typewriterFrames\(i,\s*pieces\.length\)/);
+  assert.doesNotMatch(source, /duration:\s*900,\s*delay:\s*i\s*\*\s*360/);
+});
